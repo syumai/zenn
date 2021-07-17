@@ -1,0 +1,8 @@
+{
+  "name": "syumai-zenn-contents",
+  "version": "0.0.1",
+  "private": "true",
+  "dependencies": {
+    "zenn-cli": "^0.1.91"
+  }
+}
