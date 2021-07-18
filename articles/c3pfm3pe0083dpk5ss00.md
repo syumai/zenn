@@ -178,7 +178,7 @@ func f() (_r0 int) {
 ## 3. defer 文で遅延された関数の実行タイミング
 
 defer 文で遅延された関数は、**return 文が実行された後、関数が終了する前**に実行されます[^6]。
-すなわち、defer 文は **return 文が結果パラメータの変数に設定した値を使うことが出来ます**。
+すなわち、defer 文によって遅延された関数は **return 文が結果パラメータの変数に設定した値を使うことが出来ます**。
 
 [^6]: 仕様には、 *if the surrounding function returns through an explicit return statement, deferred functions are executed after any result parameters are set by that return statement but before the function returns to its caller.* と書かれています。
 
