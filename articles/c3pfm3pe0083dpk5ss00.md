@@ -91,8 +91,7 @@ Parameters (パラメータ) = "(" [ ParameterList [ "," ] ] ")" .
 
 > The return parameters of the function are passed by value back to the caller when the function returns.
 
-ざっくり訳すと、 *関数が返るとき、関数の戻りパラメータが呼び出し元に値で渡される* と書かれています。
-仕様のこの箇所でのみ `return parameters` と書かれていますが、これは `result parameters` の事を指していると考えて問題無いでしょう。
+ざっくり訳すと、 *関数が返るとき、関数の戻りパラメータが呼び出し元に値で渡される* と書かれています。(仕様のこの箇所でのみ `return parameters` と書かれていますが、これは `result parameters` の事を指していると考えて問題無いでしょう。)
 
 次に、`関数の実行終了時点で結果パラメータに格納されている値を返す`と言った時の、**結果パラメータに格納されている値**とは何かについて考えます。
 
@@ -113,7 +112,7 @@ func F(a int) (b int) {
 
 このように、名前付き結果パラメータは、関数内で通常のローカル変数と同じように扱うことが出来ます[^4]。
 ここから、結果パラメータに格納されている値とは、**関数実行終了時点で、名前付き結果パラメータの変数に格納されている値**のことを指すと考えられます。
-上記の例で言うと、関数実行終了時点で変数 `b` に格納されている値は `10` なので、結果は `10` となります。
+上記の例で言うと、関数実行終了時点で変数 `b` に格納されている値は `10` なので、関数呼び出しの結果は `10` となります。
 
 [^4]: 仕様では、 *The result parameters act as ordinary local variables and the function may assign values to them as necessary.* と書かれています。
 
