@@ -308,6 +308,6 @@ func Less(a, b int) (err error) {
 
 ### panicに渡された値をrecoverで取得して結果パラメータに設定する
 
-これはtenntennさんがTwitterに書かれていたもので、非常に実用的です。興味のある方は下記リンクから資料をご覧いただければと思います。
+これはtenntennさんがTwitterに書かれていたもので、非常に実用的です。興味のある方は下記Tweetから資料をご覧いただければと思います。
 
 https://twitter.com/tenntenn/status/1416941261328588801?s=20
