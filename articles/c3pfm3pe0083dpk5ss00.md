@@ -286,7 +286,7 @@ func Less(a, b int) (err error) {
 }
 ```
 
-この時、次のようなdefer 文を書けば、`return 文 A`と`return 文 B`のどちらでエラーが起きたが記録することが出来ます。
+この時、次のようなdefer 文を書けば、`return 文 A`と`return 文 B`のどちらでエラーが起きたか記録することが出来ます。
 
 ```go
 func Less(a, b int) (err error) {
