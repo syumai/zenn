@@ -111,7 +111,7 @@ func F(a int) (b int) {
 ```
 
 このように、名前付き結果パラメータは、関数内で通常のローカル変数と同じように扱うことが出来ます[^4]。
-ここから、結果パラメータに設定されている値とは、**関数実行終了時点で、名前付き結果パラメータの変数に格納されている値**のことを指すと考えられます。
+ここから、結果パラメータに設定されている値とは、**関数実行終了時点で、名前付き結果パラメータの変数に設定されている値**のことを指すと考えられます。
 上記の例で言うと、関数実行終了時点で変数 `b` に設定されている値は `10` なので、関数呼び出しの結果は `10` となります。
 
 [^4]: 仕様では、 *The result parameters act as ordinary local variables and the function may assign values to them as necessary.* と書かれています。
@@ -133,7 +133,7 @@ func F() (i int) {
 ```
 
 この時、 `return 100` は、名前付き結果パラメータの変数 `i` に対して `100` を設定します。
-関数は、実行終了時点で結果パラメータの変数に格納されている値を返すので、 `100` を返します。
+関数は、実行終了時点で結果パラメータの変数に設定されている値を返すので、 `100` を返します。
 
 ### 例2) 複数の値の返却
 
@@ -178,7 +178,7 @@ func f() (_r0 int) {
 ## 3. defer 文で遅延された関数の実行タイミング
 
 defer 文で遅延された関数は、**return 文が実行された後、関数が呼び出し元に値を返す前**に実行されます[^6]。
-すなわち、defer 文によって遅延された関数は **return 文が結果パラメータの変数に設定した値を使うことが出来ます**。
+したがって、defer 文によって遅延された関数は **return 文が結果パラメータの変数に設定した値を使うことが出来ます**。
 
 [^6]: 仕様には、 *if the surrounding function returns through an explicit return statement, deferred functions are executed after any result parameters are set by that return statement but before the function returns to its caller.* と書かれています。
 
