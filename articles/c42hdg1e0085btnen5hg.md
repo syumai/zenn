@@ -660,6 +660,13 @@ func main() {
 * Issue上のコメントはタイミングによってContributorのみにロックされていることもある
   - どちらかと言うとDiscussion側中心で進めて、Issueへのコメントは増やしすぎたくないように見える
 
+## Proposalの主な著者について
+
+* Generics関連の言語仕様については、 `ianlancetaylor` 氏が出しているものが多いようです。
+  - 重要性が高いProposalを多く出しているので、議論中のものに関しても特に注視するのが良さそうです。
+    - Russ Cox氏が出しているmaps packageのproposalも `ianlancetaylor` 氏のDiscussion上での書き込みをconvertしたものでした
+* Generics関連の静的解析についての仕様は、 `findleyr` 氏がほぼ全て出しているようです。
+
 # 最後に
 
 まだまだ議論中のProposalが沢山あるので、随時更新していきたいです！
