@@ -10,20 +10,22 @@ published: false
 
 # Generics関連のProposal一覧
 
+GoのGitHub Issueと、Gerritから見付けたGenerics関連のProposalを表にまとめました。
+
 | Proposal                                              | Status                   | Author         | GitHub Issue                                        | Proposal Document / Gerrit                                                                               |
 | :---------------------------------------------------- | :----------------------- | :------------- | :-------------------------------------------------- | :------------------------------------------------------------------------------------------------------- |
 | type parameters                                       | **accepted (2021/2/11)** | ianlancetaylor | [#43651](https://github.com/golang/go/issues/43651) | [Proposal](https://go.googlesource.com/proposal/+/refs/heads/master/design/43651-type-parameters.md)     |
 | type sets                                             | **accepted (2021/7/22)** | ianlancetaylor | [#45346](https://github.com/golang/go/issues/45346) | [Gerrit](https://go-review.googlesource.com/c/proposal/+/306689)                                         |
 | constraints package                                   | **accepted (2021/8/19)** | ianlancetaylor | [#45458](https://github.com/golang/go/issues/45458) |                                                                                                          |
 | slices package                                        | **accepted (2021/8/12)** | ianlancetaylor | [#45955](https://github.com/golang/go/issues/45955) |                                                                                                          |
-| maps package                                          | 議論中 (2021/8/17現在)   | rsc            | [#47649](https://github.com/golang/go/issues/47649) |                                                                                                          |
-| sync, sync/atomic: add PoolOf, MapOf, ValueOf         | 議論中 (2021/8/17現在)   | ianlancetaylor | [#47657](https://github.com/golang/go/issues/47657) |                                                                                                          |
-| go/ast changes for generics                           | 議論中 (2021/8/17現在)   | findleyr       | [#47781](https://github.com/golang/go/issues/47781) | [Proposal](https://go.googlesource.com/proposal/+/master/design/47781-parameterized-go-ast.md)           |
-| go/types changes for generics                         | 議論中 (2021/8/17現在)   | findleyr       | -                                                   | [Gerrit](https://go-review.googlesource.com/c/proposal/+/328610)                                         |
-| go/parser: add a mode flag to disallow the new syntax | 議論中 (2021/8/17現在)   | findleyr       | [#47783](https://github.com/golang/go/issues/47783) |                                                                                                          |
-| disallow type parameters as RHS of type declarations  | 議論中 (2021/8/17現在)   | findleyr       | [#45639](https://github.com/golang/go/issues/45639) |                                                                                                          |
-| Generic parameterization of array sizes               | 議論中 (2021/8/17現在)   | ajwerner       | [#44253](https://github.com/golang/go/issues/44253) | [Proposal](https://go.googlesource.com/proposal/+/refs/heads/master/design/44253-generic-array-sizes.md) |
-| container/heap package                                | 議論中 (2021/8/17現在)   | cespare        | [#47632](https://github.com/golang/go/issues/47632) |                                                                                                          |
+| maps package                                          | 議論中 (2021/8/19現在)   | rsc            | [#47649](https://github.com/golang/go/issues/47649) |                                                                                                          |
+| sync, sync/atomic: add PoolOf, MapOf, ValueOf         | 議論中 (2021/8/19現在)   | ianlancetaylor | [#47657](https://github.com/golang/go/issues/47657) |                                                                                                          |
+| go/ast changes for generics                           | 議論中 (2021/8/19現在)   | findleyr       | [#47781](https://github.com/golang/go/issues/47781) | [Proposal](https://go.googlesource.com/proposal/+/master/design/47781-parameterized-go-ast.md)           |
+| go/types changes for generics                         | 議論中 (2021/8/19現在)   | findleyr       | -                                                   | [Gerrit](https://go-review.googlesource.com/c/proposal/+/328610)                                         |
+| go/parser: add a mode flag to disallow the new syntax | 議論中 (2021/8/19現在)   | findleyr       | [#47783](https://github.com/golang/go/issues/47783) |                                                                                                          |
+| disallow type parameters as RHS of type declarations  | 議論中 (2021/8/19現在)   | findleyr       | [#45639](https://github.com/golang/go/issues/45639) |                                                                                                          |
+| Generic parameterization of array sizes               | 議論中 (2021/8/19現在)   | ajwerner       | [#44253](https://github.com/golang/go/issues/44253) | [Proposal](https://go.googlesource.com/proposal/+/refs/heads/master/design/44253-generic-array-sizes.md) |
+| container/heap package                                | 議論中 (2021/8/19現在)   | cespare        | [#47632](https://github.com/golang/go/issues/47632) |                                                                                                          |
 
 # 各Proposalの紹介
 
@@ -91,8 +93,8 @@ type setsの詳細については、Nobishiiさんの下記の記事を参照く
 
 ## constraints package
 
-Status: accepted
-Issue: https://github.com/golang/go/issues/45458
+* Status: accepted
+* Issue: https://github.com/golang/go/issues/45458
 
 constraints packageは、type parameterのconstraintsに頻繁に使われるであろう定義をまとめたpackageです。
 例えば、 `constraints.Integer` は全ての整数型にマッチする制約になっており、下記のような、整数型の値のみを受け付けるジェネリックな関数を宣言する時に使えます。
@@ -112,7 +114,6 @@ func main() {
 ```
 
 constraints packageは、初めtype parameters proposalに登場しており、本Proposalはそのpackageの内容を精緻化するものです。
-無事acceptされたので、type parameterのリリースと同時にGoに実装されると思われます。
 
 ### constraints packageに定義されている型の一覧
 
@@ -150,12 +151,104 @@ type Chan[Elem any] interface { ~chan Elem }
 ### 使われ方の想定
 
 constraints packageは、他のジェネリックな機能を提供する標準packageで頻繁に使われそうです。
-後述する slices / maps でも `Slice`, `Map` や　 `Ordered` の制約が使われていたりします。
+後述する slices でも `Slice` や `Ordered` の制約が使われていたりします。 (なんと、maps packageでは今のところ `Map` 制約が使われていない)
 単純に、Sliceだけを受け付ける関数を書きたい！といった通常の使い方ももちろん出来ます。
+
+### 実用的なコード例
+
+#### 任意の型のsliceのソート
+
+* `Slice` と　`Ordered` を使った例です
+
+```go
+import (
+  "fmt"
+  "sort"
+)
+
+func SortSlice[S constraints.Slice[T], T constraints.Ordered](s S) {
+	sort.Slice(s, func(i, j int) bool { return s[i] < s[j] })
+}
+
+func main() {
+  ints := []int{3,1,4,2,5}
+  SortSlice(ints)
+  fmt.Println(ints) // [1 2 3 4 5]
+
+  strs := []string{"c", "b", "a"}
+  SortSlice(strs)
+  fmt.Println(strs) // [a b c]
+}
+```
+
+#### 任意の型のチャネルのバッファ内の値を全てSliceに出力する
+
+```go
+import (
+  "fmt"
+)
+
+func FlushSlice[C constraints.Chan[T], T any](ch C) []T {
+  result := make([]T, 0, cap(ch)))
+Loop:
+  for {
+    select {
+      case v, ok := <-ch:
+        if !ok {
+          break Loop
+        }
+        result = append(result, v)
+      default:
+        break Loop
+    }
+  }
+  return result
+}
+
+func main() {
+  intCh := make(chan int, 3)
+  intCh <- 1; intCh <- 2; intCh <- 3
+
+  strCh := make(chan string, 3)
+  strCh <- "a"; strCh <- "b"; strCh <- "c"
+
+  fmt.Println(FlushSlice(intCh)) // [1 2 3]
+  fmt.Println(FlushSlice(strCh)) // [a b c]
+}
+```
 
 ### 補足
 
-他のGoが提供するconstraintsには、 `any` と `comparable` があります。
+#### `Slice`, `Map`, `Chan` constraintの使いどころについて
+
+* 先ほどの例のSortSliceは、実は `func SortSlice[T constraints.Ordered](s []T) {}` と書けるので、 `constraints.Slice` は使わなくても良い
+* これらのconstraintが必要になるのは、引数として受け取ったsliceの型の値をそのまま返したい場合
+  - 例えば、スライスを操作した結果を返す関数に `type Ints []int` を渡した場合、戻り値は `Ints` 型であって欲しい
+    - これを満たすシグニチャは `F[S constraints.Slice[T], T any](s S) S`
+    - これが `F[T any](s []T) []T` で宣言されていると、戻り値の型は `[]T` 型になってしまう
+* また、 `[]T` が2回以上使われる場合は、 `[]T` ではなく `S` と書けると便利なので、そういった用途でも便利そう (`Map`と`Chan`も同様)
+
+#### `Chan` の補足
+
+* `Chan` は `~chan Elem` を制約とするので、実は `<-chan Elem` はこの制約を満たさない
+  - `chan Elem` は `<- chan Elem` のunderlying typeではないため
+  - どんな channel に対しても使える制約ではない点に注意が必要
+
+* したがって、先ほどの `FlushSlice` 関数に対して、次のようなコードはcompile errorとなる
+
+```go
+func main() {
+  intCh := make(chan int, 3)
+  intCh <- 1; intCh <- 2; intCh <- 3
+
+  var intRecvCh <-chan int = intCh
+  fmt.Println(FlushSlice(intRecvCh)) // <-chan int does not satisfy Chan[T]
+}
+```
+
+#### その他のよく使われそうなconstraintsについて
+
+他によく使われそうなconstraintsとしては、Go本体により提供される `any` と `comparable` があります。
 anyは、全ての型を受け付ける制約で、comparableは `比較可能` な型 (==, !=, <, <=, >, >= をサポートする型) を受け付ける制約です。
 これは事前宣言された識別子に紐付く型として、Goに組み込まれます (packageとしての提供ではありません)。
 
@@ -163,21 +256,25 @@ Orderedとcomparableはかなり紛らわしいですが、[その違いは、co
 
 ## slices package
 
-Status: accepted
-Issue: https://github.com/golang/go/issues/45955
+* Status: accepted
+* Issue: https://github.com/golang/go/issues/45955
 
 ジェネリックなslice操作を行うためのpackageを導入する提案です。
-このpackageによって、これまで大変だった次のような操作が簡単に出来るようになります。
+これまでは操作の対象にしたい各sliceの要素型に合わせて関数を定義する必要がありましたが、slices package一つで済むようになりました。
+
+このpackageによって、大変だった次のような操作が簡単に出来るようになります。
 
 * slice同士の比較 (for文を使って全要素を比較する必要があった)
 * sliceの一部を取り除いたり、sliceの途中に要素を挿入したりする操作 (これまで[SliceTrick](https://github.com/golang/go/wiki/SliceTricks)を駆使する必要があった)
+
+sliceの操作は、行いたい作業に対して実装が複雑になりがちだったのですが、このpackageの導入で課題が一気に解決した印象です。
 
 ### slices packageで宣言されている関数の一覧
 
 ```go
 package slices
 
-import "constraints" // See #45458
+import "constraints"
 
 // 2つのsliceの長さが同じで、含まれる要素とその順番が等しいかどうかを返す
 func Equal[T comparable](s1, s2 []T) bool
@@ -219,10 +316,89 @@ func Grow[S constraints.Slice[T], T any](s S, n int) S
 func Clip[S constraints.Slice[T], T any](s S) S
 ```
 
+### これまでの書き方との比較
+
+#### sliceの比較
+
+```go
+// slicesなし
+func EqualInts(a, b []int) bool {
+  if len(a) != len(b) {
+    return false
+  }
+  for i := 0; i < len(a); i++ {
+    if a[i] != b[i] {
+      return false
+    }
+  }
+  return true
+}
+
+func EqualStrs(a, b []string) bool {
+  ... // string用の全く同じ実装
+}
+
+func main() {
+  is1 := []int{1, 2, 3}
+  is2 := []int{1, 2, 4} // not equal
+
+  ss1 := []string{"a", "b", "c"}
+  ss2 := []string{"a", "b", "c"} // equal
+
+  fmt.Println(EqualInts(is1, is2)) // false
+  fmt.Println(EqualStrs(ss1, ss2)) // true
+}
+
+// slicesあり
+func main() {
+  is1 := []int{1, 2, 3}
+  is2 := []int{1, 2, 4}
+
+  ss1 := []string{"a", "b", "c"}
+  ss2 := []string{"a", "b", "c"}
+
+  fmt.Println(slices.Equal(is1, is2)) // false
+  fmt.Println(slices.Equal(ss1, ss2)) // true
+}
+
+```
+
+#### sliceへのInsert / Delete
+
+```go
+// slicesなし
+func InsertInt(a []int, x, i int) []int {
+  return append(a[:i], append([]T{x}, a[i:]...)...)
+}
+
+func DeleteInt(a []int, i int) []int {
+  copy(a[i:], a[i+1:])
+  a[len(a)-1] = 0
+  return a[:len(a)-1]
+}
+
+func main() {
+  a := []int{1, 2, 3, 4, 5}
+  a = InsertInt(a, 2, 100) // index: 2に100を挿入
+  a = DeleteInt(a, 3) // index: 3の要素を削除
+  fmt.Println(a) // [1, 2, 100, 4, 5]
+}
+
+// slicesあり
+func main() {
+  a := []int{1, 2, 3, 4, 5}
+  a = slices.Insert(a, 2, 100) // index: 2に100を挿入
+  a = slices.Delete(a, 3, 4) // index: 3:4 の要素を削除
+  fmt.Println(a) // [1, 2, 100, 4, 5]
+}
+```
+
+これ以外にも、sliceを格納したsliceをソートする関数を書くといった例も考えられそうです
+
 ### 補足
 
-* Map, Filter, Reduceはここには含まれていません。
-  - どこか、より包括的な *streams API* の一部になるとよいだろう、と[rscがコメント](https://github.com/golang/go/issues/45955#issuecomment-884406307)しています。
+* Map, Filter, Reduceはここには含まれていない
+  - どこか、より包括的な *streams API* の一部になるとよいだろう、と[rscがコメント](https://github.com/golang/go/issues/45955#issuecomment-884406307)している
 
 ---
 
@@ -230,7 +406,260 @@ func Clip[S constraints.Slice[T], T any](s S) S
 
 ## maps package
 
-Status: 議論中
-Issue: https://github.com/golang/go/issues/47649
+* Status: 議論中
+* Issue: https://github.com/golang/go/issues/47649
 
+ジェネリックなmap操作を行うためのpackageを導入する提案です。
+slice同様、これまで頻出した操作を簡単に行うことが出来るようになります。
 
+### maps packageで宣言されている関数の一覧
+
+**(注) 下記の内容は今後変わる可能性が非常に高いです**
+
+```go
+package maps
+
+// map `m` のキーのsliceを返す。順序は不定
+func Keys[K comparable, V any](m map[K]V) []K
+
+// `m` の値のsliceを返す。順序は不定
+func Values[K comparable, V any](m map[K]V) []V
+
+// 2つのmapが同じキーと値のペアを保持しているかを返す
+func Equal[K, V comparable](m1, m2 map[K]V) bool
+
+func EqualFunc[K comparable, V1, V2 any](m1 map[K]V1, m2 map[K]V2, cmp func(V1, V2) bool) bool
+
+// `m` の要素を全て削除する
+func Clear[K comparable, V any](m map[K]V)
+
+// `m` のコピーを返す。浅いクローン (新しい map のキーと値への単純な代入) となる
+func Clone[K comparable, V any](m map[K]V) map[K]V
+
+// map `src` のキーと値のペアを全て map `dst` に追加する
+// 重複したキーの値は上書きされる
+func Add[K comparable, V any](dst, src map[K]V)
+
+// `m` 対して、関数 `keep` が false を返すキーと値のペアを全て削除する
+func Filter[K comparable, V any](m map[K]V, keep func(K, V) bool)
+```
+
+### これまでの書き方との比較
+
+#### mapのキーのsliceの取得
+
+```go
+// mapsなし
+func IntMapKeys(m map[int]bool) []int {
+  s := make([]int, 0, len(m))
+  for k := range m {
+    s = append(s, k)
+  }
+  return s
+}
+
+func main() {
+  m := map[int]bool{
+    1: true,
+    2: false,
+    3: true
+  }
+  fmt.Println(IntMapKeys(m)) // 例) [2, 1, 3] (順序は不定)
+}
+
+// mapsあり
+
+func main() {
+  m := map[int]bool{
+    1: true,
+    2: false,
+    3: true
+  }
+  fmt.Println(maps.Keys(m)) // 例) [3, 2, 1] (順序は不定)
+}
+```
+
+### その他の使用例
+
+#### 奇数と偶数のmapを分ける
+
+```go
+func SeparateEvenOddMaps[M constraints.Map[K, V], K comparable, V constraints.Integer](m M) (even, odd M) {
+	even, odd = maps.Clone[M, K, V](m), maps.Clone[M, K, V](m) // Note: 手元の実装で [M, K, V] は `m` から推論出来なかった
+	maps.Filter(even, func (k K, v V) bool { return v % 2 == 0 })
+	maps.Filter(odd, func (k K, v V) bool { return v % 2 == 1 })
+	return
+}
+
+func main() {
+	strIntMap := map[string]int{
+		"A": 1,
+		"B": 2,
+		"C": 3,
+		"D": 4,
+	}
+	even, odd := SeparateEvenOddMaps(strIntMap)
+	fmt.Println(even) // 例) map[B:2 D:4] (順序は不定)
+	fmt.Println(odd) // 例) map[A:1 C:3] (順序は不定)
+}
+```
+
+## sync, sync/atomic: add PoolOf, MapOf, ValueOf 
+
+* Status: 議論中 (2021/8/19現在)
+* Issue: https://github.com/golang/go/issues/47657
+
+sync.Pool / sync.Map / atomic.Valueをジェネリックにする提案。
+これまで、これらは `interface{}` 型の値を受け付けるのみだったが、コンパイル時に型を決定して安全に扱えるようにする提案。
+
+内容の抜粋
+
+```go
+package sync
+
+// 従来のPool
+type Pool struct {
+	New func() interface{}
+}
+// (*Pool) Get / Put => interface{}
+
+// T型の値のPool
+type PoolOf[T any] struct {
+    ...
+    New func() T
+}
+// (*PoolOf[T]) Get / Put => T
+
+// ---
+
+// 従来のMap
+type Map struct { ... }
+// (*Map) Load(key interface{}) => interface{}
+
+// K, Vをキーと値の型に持つMap
+type MapOf[K comparable, V any] struct { ... }
+// (*MapOf[K, V]) Load(key K) => V
+```
+
+```go
+package atomic
+
+// 従来のValue
+type Value struct { ... }
+// (*Value) Load() => interface{}
+
+// T型のValue
+type ValueOf[T any] struct { ... }
+// (*ValueOf[T]) Load() => T
+```
+
+### atomic.ValueOfの利用イメージ
+
+```go
+import "atomic"
+
+type Config struct {
+  A int
+  B string
+}
+
+var config atomic.ValueOf[Config]
+
+func Load() Config {
+  return config.Load()
+}
+
+func Store(c Config) {
+  config.Store(c)
+}
+```
+
+型アサーションが不要となり、安全に扱えるようになっています
+
+## Generic parameterization of array sizes
+
+* Status: 議論中 (2021/8/19現在)
+* Issue: https://github.com/golang/go/issues/44253
+
+配列は長さによって型が異なるので、constraintを簡単に書くことが出来ない。
+これを例外的に許容するための独自の文法を追加する提案です。
+
+注) 本Proposalの内容はtype listの内容は `type list` のままで書かれているので、独自にtype setsで解釈して紹介します。
+
+**配列を受け付けるconstraintの例**
+
+```go
+type IntArray interface {
+  ~[1]int | ~[2]int | ~[3]int | ~[4]int | ... | ~[100]int // 必要な分を全部unionで定義する必要がある
+}
+
+func PrintInts(ints IntArray) {
+  fmt.Println(ints)
+}
+
+func main() {
+  i1 := [100]int{1,2, ..., 100}
+  PrintInts(i) // ok
+  i2 := [101]int{1,2, ..., 101}
+  PrintInts(i) // ng (100までしか定義に含んでいないため)
+}
+```
+
+**提案されている内容** (をtype setで解釈したもの)
+
+```go
+type IntArray interface {
+  ~[...]int // どんな長さの配列も許容する
+}
+
+func PrintInts(ints IntArray) {
+  fmt.Println(ints)
+}
+
+func main() {
+  i1 := [100]int{1,2, ..., 100}
+  PrintInts(i) // ok
+  i2 := [101]int{1,2, ..., 101}
+  PrintInts(i) // ok
+}
+```
+
+また、多重配列 (matrix) のサポートについても提案に含まれています。
+これについては、下記の `len(D)` のようにtype parameterから長さの情報を取得する想定となっています。(個人的には、やや厳しい気がします)
+
+```go
+type Dim interface {
+  ~[...]struct{}
+}
+
+type Matrix2D[D Dim, T any] [len(D)][len(D)]T
+
+func main() {
+  m := Matrix2D[[3]struct{}, int] // [3][3]int
+}
+```
+
+## その他 proposal
+
+言語仕様が変わるので、静的解析に使われる go/ast や go/types などに対する変更もProposalが出されており、現在議論中のようです。
+(紹介はWIPです。すみません)
+
+# おまけ話
+
+## Proposalの探し方
+
+* 基本は、[golang/goのGitHub Issue上](https://github.com/golang/go/issues)で　`Proposal` タグが付いているものを探せばOK
+  - ジェネリクス関係は `generics` タグも付いている
+* [golang/proposal](https://github.com/golang/proposal)宛てのレビューを先に行ってからIssueがOpenされるものもある (表の `go/ast` の提案がこれに該当)
+  - [Gerrit上で `repo: proposal` のもの](https://go-review.googlesource.com/q/status:open+repo:proposal)を見ると探しやすい
+
+## GoのProposalの議論方法について
+
+* 基本的に [GitHub Discussions](https://github.com/golang/go/discussions/categories/discussions) 上で行われているらしい
+* Discussionには誰でも参加できる形で開かれている
+* Issue上のコメントはタイミングによってContributorのみにロックされていることもある
+  - どちらかと言うとDiscussion側中心で進めて、Issueへのコメントは増やしすぎたくないように見える
+
+# 最後に
+
+まだまだ議論中のProposalが沢山あるので、随時更新していきたいです！
