@@ -33,8 +33,8 @@ type parameters / type setsについては他に優れた資料があるので�
 
 ## type parameters
 
-Status: accepted
-Issue: https://github.com/golang/go/issues/43651
+* Status: accepted
+* Issue: https://github.com/golang/go/issues/43651
 
 Goでジェネリックなプログラミングを行えるようにするために、型や関数が *type parameter* を受け付けることを出来るようにする提案です。
 型パラメータが受け付ける型に対しての *constraints* の導入や、型推論のルールについてもこの提案に含まれています。
@@ -65,8 +65,8 @@ func Stringify[T Stringer](s []T) (ret []string) {
 
 ## type sets
 
-Status: accepted
-Issue: https://github.com/golang/go/issues/45346
+* Status: accepted
+* Issue: https://github.com/golang/go/issues/45346
 
 前述の、type parametersのProposalがacceptされた時点で含まれていた、constraintsにおける *type list* を置き換える提案です。
 type parameterのconstraintsにおけるtype listのわかりにくさを解消し、より一般的な解決法を提案したもので、2021年7月にacceptされました。
