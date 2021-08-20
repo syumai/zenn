@@ -605,7 +605,7 @@ func main() {
 
 ```go
 func SeparateEvenOddMaps[M constraints.Map[K, V], K comparable, V constraints.Integer](m M) (even, odd M) {
-	even, odd = maps.Clone[M, K, V](m), maps.Clone[M, K, V](m) // Note: 手元の実装で [M, K, V] は `m` から推論出来なかった
+	even, odd = maps.Clone[K, V](m), maps.Clone[K, V](m) // Note: 手元の実装で [K, V] は `m` から推論出来なかった
 	maps.Filter(even, func (k K, v V) bool { return v % 2 == 0 })
 	maps.Filter(odd, func (k K, v V) bool { return v % 2 == 1 })
 	return
