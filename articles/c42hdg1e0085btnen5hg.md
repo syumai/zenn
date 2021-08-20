@@ -22,7 +22,7 @@ GoのGitHub Issueと、Gerritから見付けたGenerics関連のProposalを表�
 | constraints package                                   | **accepted (2021/8/19)** | ianlancetaylor | [#45458](https://github.com/golang/go/issues/45458) |                                                                                                          |
 | slices package                                        | **accepted (2021/8/12)** | ianlancetaylor | [#45955](https://github.com/golang/go/issues/45955) |                                                                                                          |
 | maps package                                          | 議論中 (2021/8/20現在)   | rsc            | [#47649](https://github.com/golang/go/issues/47649) |                                                                                                          |
-| sync, sync/atomic: add PoolOf, MapOf, ValueOf         | 議論中 (2021/8/20現在)   | ianlancetaylor | [#47657](https://github.com/golang/go/issues/47657) |                                                                                                          |
+| sync, sync/atomic: add PoolOf, MapOf, ValueOf         | active (2021/8/20現在)   | ianlancetaylor | [#47657](https://github.com/golang/go/issues/47657) |                                                                                                          |
 | go/ast changes for generics                           | 議論中 (2021/8/20現在)   | findleyr       | [#47781](https://github.com/golang/go/issues/47781) | [Proposal](https://go.googlesource.com/proposal/+/master/design/47781-parameterized-go-ast.md)           |
 | go/types changes for generics                         | 議論中 (2021/8/20現在)   | findleyr       | -                                                   | [Gerrit](https://go-review.googlesource.com/c/proposal/+/328610)                                         |
 | go/parser: add a mode flag to disallow the new syntax | 議論中 (2021/8/20現在)   | findleyr       | [#47783](https://github.com/golang/go/issues/47783) |                                                                                                          |
@@ -505,7 +505,7 @@ func main() {
 
 ## sync, sync/atomic: add PoolOf, MapOf, ValueOf 
 
-* Status: 議論中 (2021/8/20現在)
+* Status: active (2021/8/20現在)
 * Issue: https://github.com/golang/go/issues/47657
 
 sync.Pool / sync.Map / atomic.Valueをジェネリックにする提案。
