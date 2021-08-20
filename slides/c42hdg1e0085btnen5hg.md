@@ -131,8 +131,6 @@ Status: accepted
 
 ---
 
-## type parameters
-
 ### Proposal内のコード例 
 
 * Stringerと言う名前で、String()メソッドを持つconstraintを定義している
@@ -378,7 +376,7 @@ Status: accepted
 * 次のような操作が簡単に出来るようになる
   - slice同士の比較
   - sliceの一部を取り除いたり、sliceの途中に要素を挿入したりする操作
-    - (これまで[SliceTrick](https://github.com/golang/go/wiki/SliceTricks)を駆使する必要があった)
+    - (これまで[SliceTricks](https://github.com/golang/go/wiki/SliceTricks)を駆使する必要があった)
 
 ---
 
@@ -478,8 +476,7 @@ func main() {
 
 #### sliceへのInsert / Delete
 
-* Insert / Deleteは Slice Tricks から持ってきている
-* これまでは行いたい操作に対して実装が複雑すぎたが、シンプルに書けるようになった
+* Insert / Deleteは SliceTricks から持ってきている。これまでは行いたい操作に対して実装が複雑すぎたが、シンプルに書けるようになった
 
 ```go
 // slicesなし

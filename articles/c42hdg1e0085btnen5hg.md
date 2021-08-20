@@ -3,7 +3,7 @@ title: "GoのGenerics関連プロポーザル最新状況まとめと簡単な�
 emoji: "☄️"
 type: "tech"
 topics: ["go", "プログラミング", "言語仕様"]
-published: false
+published: true
 ---
 
 本記事では、GoのGenerics関連のProposal一覧のまとめと、簡単な解説を行います。
@@ -262,7 +262,7 @@ Orderedとcomparableはかなり紛らわしいですが、[その違いは、co
 このpackageによって、大変だった次のような操作が簡単に出来るようになります。
 
 * slice同士の比較 (for文を使って全要素を比較する必要があった)
-* sliceの一部を取り除いたり、sliceの途中に要素を挿入したりする操作 (これまで[SliceTrick](https://github.com/golang/go/wiki/SliceTricks)を駆使する必要があった)
+* sliceの一部を取り除いたり、sliceの途中に要素を挿入したりする操作 (これまで[SliceTricks](https://github.com/golang/go/wiki/SliceTricks)を駆使する必要があった)
 
 sliceの操作は、行いたい作業に対して実装が複雑になりがちだったのですが、このpackageの導入で課題が一気に解決した印象です。
 
@@ -357,6 +357,9 @@ func main() {
 ```
 
 #### sliceへのInsert / Delete
+
+* Insert / Deleteは SliceTricks から持ってきている
+* これまでは行いたい操作に対して実装が複雑すぎたが、シンプルに書けるようになった
 
 ```go
 // slicesなし
@@ -635,7 +638,7 @@ func main() {
 ## その他 proposal
 
 言語仕様が変わるので、静的解析に使われる go/ast や go/types などに対する変更もProposalが出されており、現在議論中のようです。
-(紹介はWIPです。すみません)
+(紹介はWIPです)
 
 # おまけ話
 
