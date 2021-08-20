@@ -628,7 +628,7 @@ type Dim interface {
 type Matrix2D[D Dim, T any] [len(D)][len(D)]T
 
 func main() {
-  m := Matrix2D[[3]struct{}, int] // [3][3]int
+  var m Matrix2D[[3]struct{}, int] // [3][3]int
 }
 ```
 
