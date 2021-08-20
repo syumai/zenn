@@ -1,16 +1,55 @@
 ---
-title: "GoのGenerics関連プロポーザル最新状況まとめと簡単な解説 (2021年8月版)"
-emoji: "☄️"
-type: "tech"
-topics: ["go", "プログラミング", "言語仕様"]
-published: true
+marp: true
 ---
 
-本記事では、GoのGenerics関連のProposal一覧のまとめと、簡単な解説を行います。
+# GoのGenerics関連Proposal最新状況まとめと簡単な解説 (2021年8月版)
 
-# Generics関連のProposal一覧
+## syumai
 
-GoのGitHub Issueと、Gerritから見付けたGenerics関連のProposalを表にまとめました。
+### Go 1.17 リリースパーティー
+
+---
+
+# 自己紹介
+
+## syumai
+
+![avatar](https://avatars.githubusercontent.com/u/6882878?v=4)
+
+`Go Language Specification 輪読会` と言う勉強会を主催しています
+
+普段はGoとTypeScriptを書きつつ生活しています
+
+Twitter: [@__syumai](https://twitter.com/__syumai)
+
+---
+
+# 本日のテーマ
+
+---
+
+## GoのGenerics関連Proposal
+
+---
+
+## そもそも、Proposalってどこに出ているの?
+
+---
+
+## Proposalの探し方
+
+* 基本は、[golang/goのGitHub Issue上](https://github.com/golang/go/issues)で　`Proposal` タグが付いているものを探せばOK
+  - ジェネリクス関係は `generics` タグも付いている
+* [golang/proposal](https://github.com/golang/proposal)宛ての変更としてレビューを先に行ってからIssueがOpenされるものもある (表の `go/ast` の提案がこれに該当)
+  - [Gerrit上で `repo: proposal` のもの](https://go-review.googlesource.com/q/status:open+repo:proposal)を見ると探しやすい
+
+---
+
+## 見付けたProposal一覧を表にしました
+
+---
+
+<div style="font-size: 16px;">
 
 | Proposal                                              | Status                   | Author         | GitHub Issue                                        | Proposal Document / Gerrit                                                                               |
 | :---------------------------------------------------- | :----------------------- | :------------- | :-------------------------------------------------- | :------------------------------------------------------------------------------------------------------- |
@@ -27,32 +66,82 @@ GoのGitHub Issueと、Gerritから見付けたGenerics関連のProposalを表�
 | Generic parameterization of array sizes               | 議論中 (2021/8/20現在)   | ajwerner       | [#44253](https://github.com/golang/go/issues/44253) | [Proposal](https://go.googlesource.com/proposal/+/refs/heads/master/design/44253-generic-array-sizes.md) |
 | container/heap package                                | 議論中 (2021/8/20現在)   | cespare        | [#47632](https://github.com/golang/go/issues/47632) |                                                                                                          |
 
+</div>
+
+---
+
+## Genericsに出ているProposalのざっくり分類
+
+#### 1. 言語仕様についてのProposal
+
+<div style="font-size: 20px;">
+
+* type parameters
+* type sets
+* Generic parameterization of array sizes
+
+</div>
+
+#### 2. package追加 / 既存のpackageの変更のProposal
+
+<div style="font-size: 20px;">
+
+* constraints package
+* slices package
+* maps package
+* sync, sync/atomic package
+
+</div>
+
+#### 3. 静的解析関連のpackageの変更のProposal
+
+<div style="font-size: 20px;">
+
+* go/ast
+* go/types
+
+</div>
+
+--- 
+
+## 今日は `package追加 / 既存のpackageの変更のProposal` を中心に紹介します
+
+---
+
 # 各Proposalの紹介
 
-type parameters / type setsについては他に優れた資料があるので、ここでは内容に踏み込まず簡単な紹介に留めます。
+---
+
+
+# 言語仕様についてのProposal
+
+(他に優れた資料があるので、簡単な紹介に留めます)
+
+---
 
 ## type parameters
 
-* Status: accepted
-* Issue: https://github.com/golang/go/issues/43651
+Status: accepted
 
-Goでジェネリックなプログラミングを行えるようにするために、型や関数が *type parameter* を受け付けることを出来るようにする提案です。
-型パラメータが受け付ける型に対しての *constraints* の導入や、型推論のルールについてもこの提案に含まれています。
-表にあるProposalは全てこれをベースに提案が行われているものです。
+* Goでジェネリックなプログラミングを行えるようにするために、型や関数が *type parameter* を受け付けることを出来るようにする提案
+* 型パラメータが受け付ける型に対しての *constraints* の導入や、型推論のルールについてもこの提案に含まれている
+* 先ほどの表にあるProposalは全てこれをベースに提案が行われている
 
-Proposal内[^1]のコード例
-[^1]: https://go.googlesource.com/proposal/+/refs/heads/master/design/43651-type-parameters.md
+概要については [tenntennさんの資料](https://docs.google.com/presentation/d/10YX-P5wChDmBRXqUDDWNThtBXvg81EdS4vhUS_iRtdk/edit#slide=id.p) を参照いただくのをおすすめします
+
+---
+
+### Proposal内のコード例 
+
+* Stringerと言う名前で、String()メソッドを持つconstraintを定義している
+* Stringify関数は、type parameterとして `T` を宣言し、constraintにStringerを指定している
+  - slice sの要素型 `T` は Stringer を満たしているので、 `String()` メソッドを呼ぶことが出来る
 
 ```go
-// Stringer is a type constraint that requires the type argument to have
-// a String method and permits the generic function to call String.
-// The String method should return a string representation of the value.
 type Stringer interface {
 	String() string
 }
 
-// Stringify calls the String method on each element of s,
-// and returns the results.
 func Stringify[T Stringer](s []T) (ret []string) {
 	for _, v := range s {
 		ret = append(ret, v.String())
@@ -61,17 +150,18 @@ func Stringify[T Stringer](s []T) (ret []string) {
 }
 ```
 
-概要については [tenntennさんの資料](https://docs.google.com/presentation/d/10YX-P5wChDmBRXqUDDWNThtBXvg81EdS4vhUS_iRtdk/edit#slide=id.p) を参照いただくのがよいと思います。
+https://go.googlesource.com/proposal/+/refs/heads/master/design/43651-type-parameters.md
+
+---
 
 ## type sets
 
-* Status: accepted
-* Issue: https://github.com/golang/go/issues/45346
+Status: accepted
 
-type parameters proposalがacceptされた時点で含まれていた、constraintsにおける *type list* を置き換える提案です。
-type listのわかりにくさを解消し、より一般的な解決法を提案したもので、2021年7月にacceptされました。
+* type parameters proposalがacceptされた時点で含まれていた、constraintsにおける *type list* を置き換える提案
+* type listのわかりにくさを解消し、より一般的な解決法を提案したもの
 
-コード例
+### コード例
 
 ```go
 type PredeclaredSignedInteger interface {
@@ -83,21 +173,32 @@ type SignedInteger interface {
 }
 ```
 
-2021年8月現在、[Type Parameter Proposal](https://go.googlesource.com/proposal/+/refs/heads/master/design/43651-type-parameters.md)のドキュメントが[type sets版に書き換えられている](https://go-review.googlesource.com/c/proposal/+/306689)ところです。
-また、[言語仕様の変更](https://go-review.googlesource.com/c/go/+/294469)も既にtype sets版で作業が行われています。
+---
 
-type setsの詳細については、Nobishiiさんの下記の記事を参照ください。
+## type sets
+
+* 2021年8月現在、[Type Parameter Proposal](https://go.googlesource.com/proposal/+/refs/heads/master/design/43651-type-parameters.md)のドキュメントが[type sets版への書き換えが行われている](https://go-review.googlesource.com/c/proposal/+/306689)
+* また、[言語仕様の変更](https://go-review.googlesource.com/c/go/+/294469)も既にtype sets版で作業が行われている
+
+type setsの詳細については、Nobishiiさんの記事を参照いただくことをおすすめします
 
 * [Go の "Type Sets" proposal を読む - Zenn](https://zenn.dev/nobishii/articles/99a2b55e2d3e50)
 * [Type Sets Proposalを読む(2) - Zenn](https://zenn.dev/nobishii/articles/type_set_proposal_2)
 
+
+---
+
+# package追加 / 既存のpackageの変更のProposal
+
+---
+
 ## constraints package
 
-* Status: accepted
-* Issue: https://github.com/golang/go/issues/45458
+Status: accepted
 
-constraints packageは、type parameterのconstraintsに頻繁に使われるであろう定義をまとめたpackageです。
-例えば、 `constraints.Integer` は全ての整数型にマッチする制約になっており、下記のような、整数型の値のみを受け付けるジェネリックな関数を宣言する時に使えます。
+* type parameterのconstraintsに頻繁に使われるであろう定義をまとめたpackage
+* 例えば、 `constraints.Integer` は全ての整数型にマッチする制約
+  - 下記のような整数型の値のみを受け付ける関数を宣言する時に使える
 
 ```go
 import "constraints"
@@ -113,7 +214,7 @@ func main() {
 }
 ```
 
-constraints packageは、type parameters proposalにも登場しており、本Proposalはそのpackageの内容を精緻化するものです。
+---
 
 ### constraints packageに定義されている型の一覧
 
@@ -145,17 +246,16 @@ type Map[Key comparable, Val any] interface { ~map[Key]Val }
 type Chan[Elem any] interface { ~chan Elem }
 ```
 
-### 使われ方の想定
+---
 
-constraints packageは、他のジェネリックな機能を提供する標準packageで頻繁に使われそうです。
-後述する slices でも `Slice` や `Ordered` の制約が使われていたりします。 (なんと、maps packageでは今のところ `Map` 制約が使われていない)
-単純に、Sliceだけを受け付ける関数を書きたい！といった通常の使い方ももちろん出来ます。
+## constraints packageを使ったコード例
 
-### 実用的なコード例
+---
 
-#### 任意の型のsliceのソート
+### 任意の型のsliceのソート
 
-* `Slice` と　`Ordered` を使った例です
+* `Slice` と　`Ordered` を使った例
+* 並び替え可能な要素型を持つ任意の型のsliceを受け取り、ソートして返す
 
 ```go
 import (
@@ -178,7 +278,12 @@ func main() {
 }
 ```
 
+---
+
 #### 任意の型のチャネルのバッファ内の値を全てSliceに出力する
+
+* FlushSliceは、constraints.Chanで制約された任意の要素型のチャネルを受け付ける
+* 同じ要素型のsliceにバッファの内容を読み出して返す
 
 ```go
 import (
@@ -214,16 +319,24 @@ func main() {
 }
 ```
 
+---
+
 ### 補足
 
 #### `Slice`, `Map`, `Chan` constraintの使いどころについて
 
-* 先ほどの例のSortSliceは、実は `func SortSlice[T constraints.Ordered](s []T) {}` と書けるので、 `constraints.Slice` は使わなくても良い
+* SortSliceの例は、実は `func SortSlice[T constraints.Ordered](s []T) {}` と書けるので、 `constraints.Slice` は使わなくても良い
 * これらのconstraintが必要になるのは、引数として受け取ったsliceの型の値をそのまま返したい場合
   - 例えば、スライスを操作した結果を返す関数に `type Ints []int` を渡した場合、戻り値は `Ints` 型であって欲しい
-    - これを満たすシグニチャは `F[S constraints.Slice[T], T any](s S) S`
-    - これが `F[T any](s []T) []T` で宣言されていると、戻り値の型は `[]T` 型になってしまう
-* また、 `[]T` が2回以上使われる場合は、 `[]T` ではなく `S` と書けると便利なので、そういった用途でも便利そう (`Map`と`Chan`も同様)
+
+```go
+func F[S constraints.Slice[T], T any](s S) S {} // 戻り値の型は S (Ints)
+func F[T any](s []T) []T {} // 戻り値の型は []T ([]int)
+```
+
+---
+
+### 補足
 
 #### `Chan` の補足
 
@@ -231,40 +344,41 @@ func main() {
   - `chan Elem` は `<- chan Elem` のunderlying typeではないため
   - どんな channel に対しても使える制約ではない点に注意が必要
 
-* したがって、先ほどの `FlushSlice` 関数に対して、次のようなコードはcompile errorとなる
+* 次のようなコードはcompile error
 
 ```go
 func main() {
   intCh := make(chan int, 3)
   intCh <- 1; intCh <- 2; intCh <- 3
 
-  var intRecvCh <-chan int = intCh
-  fmt.Println(FlushSlice(intRecvCh)) // <-chan int does not satisfy Chan[T]
+  var intRecvCh <-chan int = intCh // intChを <-chan int 型に変換
+  fmt.Println(FlushSlice(intRecvCh)) // error: <-chan int は constraints.Chan[T]を満たさない
 }
 ```
 
+---
+
+### 補足
+
 #### その他のよく使われそうなconstraintsについて
 
-他によく使われそうなconstraintsとしては、Go本体により提供される `any` と `comparable` があります。
-anyは、全ての型を受け付ける制約で、comparableは `比較可能` な型 (==, !=, <, <=, >, >= をサポートする型) を受け付ける制約です。
-これは事前宣言された識別子に紐付く型として、Goに組み込まれます (packageとしての提供ではありません)。
+* Go本体に組み込まれる `any` と `comparable` と言うconstraintもある
+* anyは、全ての型を受け付けるconstraintで、comparableは `比較可能` な型 (`==, !=, <, <=, >, >=` をサポートする型) を受け付けるconstraint
+* これらと、constraints packageを使い分けながらコードを書いていくことになります
 
-Orderedとcomparableはかなり紛らわしいですが、[その違いは、comparableがinterface型を含む (ただし `==` で比較するとpanicする) こと](https://github.com/golang/go/issues/45458#issuecomment-828784686)らしいです。
+---
 
 ## slices package
 
-* Status: accepted
-* Issue: https://github.com/golang/go/issues/45955
+Status: accepted
 
-ジェネリックなslice操作を行うためのpackageを導入する提案です。
-これまでは操作の対象にしたい各sliceの要素型に合わせて関数を定義する必要がありましたが、slices package一つで済むようになりました。
+* ジェネリックなslice操作を行うためのpackageを導入する提案
+* 次のような操作が簡単に出来るようになる
+  - slice同士の比較
+  - sliceの一部を取り除いたり、sliceの途中に要素を挿入したりする操作
+    - (これまで[SliceTricks](https://github.com/golang/go/wiki/SliceTricks)を駆使する必要があった)
 
-このpackageによって、大変だった次のような操作が簡単に出来るようになります。
-
-* slice同士の比較 (for文を使って全要素を比較する必要があった)
-* sliceの一部を取り除いたり、sliceの途中に要素を挿入したりする操作 (これまで[SliceTricks](https://github.com/golang/go/wiki/SliceTricks)を駆使する必要があった)
-
-sliceの操作は、行いたい作業に対して実装が複雑になりがちだったのですが、このpackageの導入で課題が一気に解決した印象です。
+---
 
 ### slices packageで宣言されている関数の一覧
 
@@ -308,6 +422,8 @@ func Grow[S constraints.Slice[T], T any](s S, n int) S
 // sliceの使われていない容量を取り除いたsliceを返す
 func Clip[S constraints.Slice[T], T any](s S) S
 ```
+
+---
 
 ### これまでの書き方との比較
 
@@ -356,10 +472,11 @@ func main() {
 
 ```
 
+---
+
 #### sliceへのInsert / Delete
 
-* Insert / Deleteは SliceTricks から持ってきている
-* これまでは行いたい操作に対して実装が複雑すぎたが、シンプルに書けるようになった
+* Insert / Deleteは SliceTricks から持ってきている。これまでは行いたい操作に対して実装が複雑すぎたが、シンプルに書けるようになった
 
 ```go
 // slicesなし
@@ -389,7 +506,7 @@ func main() {
 }
 ```
 
-これ以外にも、sliceを格納したsliceをソートする関数を書くといった例も考えられそうです
+---
 
 ### 補足
 
@@ -400,17 +517,21 @@ func main() {
 
 (2021/8/20時点でacceptedなのはここまで)
 
+---
+
 ## maps package
 
-* Status: 議論中
-* Issue: https://github.com/golang/go/issues/47649
+Status: 議論中
 
-ジェネリックなmap操作を行うためのpackageを導入する提案です。
-slice同様、これまで頻出した操作を簡単に行うことが出来るようになります。
+* ジェネリックなmap操作を行うためのpackageを導入する提案
+
+---
 
 ### maps packageで宣言されている関数の一覧
 
-**(注) 下記の内容は今後変わる可能性が非常に高いです**
+<div style="font-size: smaller">
+注) 下記の内容は今後変わる可能性が非常に高いです
+</div>
 
 ```go
 package maps
@@ -440,6 +561,8 @@ func Add[K comparable, V any](dst, src map[K]V)
 func Filter[K comparable, V any](m map[K]V, keep func(K, V) bool)
 ```
 
+---
+
 ### これまでの書き方との比較
 
 #### mapのキーのsliceの取得
@@ -464,7 +587,6 @@ func main() {
 }
 
 // mapsあり
-
 func main() {
   m := map[int]bool{
     1: true,
@@ -474,6 +596,8 @@ func main() {
   fmt.Println(maps.Keys(m)) // 例) [3, 2, 1] (順序は不定)
 }
 ```
+
+---
 
 ### その他の使用例
 
@@ -500,15 +624,18 @@ func main() {
 }
 ```
 
+---
+
 ## sync, sync/atomic: add PoolOf, MapOf, ValueOf 
 
-* Status: 議論中 (2021/8/20現在)
-* Issue: https://github.com/golang/go/issues/47657
+Status: 議論中 (2021/8/20現在)
 
-sync.Pool / sync.Map / atomic.Valueをジェネリックにする提案。
-これまで、これらは `interface{}` 型の値を受け付けるのみだったが、コンパイル時に型を決定して安全に扱えるようにする。
+* sync.Pool / sync.Map / atomic.Valueをジェネリックにする提案
+* これまで、これらは `interface{}` 型の値を受け付けるのみだったが、コンパイル時に型を決定して安全に扱えるようにする
 
-内容の抜粋
+---
+
+### sync packageの抜粋
 
 ```go
 package sync
@@ -537,6 +664,10 @@ type MapOf[K comparable, V any] struct { ... }
 // (*MapOf[K, V]) Load(key K) => V
 ```
 
+---
+
+### atomic packageの抜粋
+
 ```go
 package atomic
 
@@ -548,6 +679,8 @@ type Value struct { ... }
 type ValueOf[T any] struct { ... }
 // (*ValueOf[T]) Load() => T
 ```
+
+---
 
 ### atomic.ValueOfの利用イメージ
 
@@ -572,17 +705,20 @@ func Store(c Config) {
 
 型アサーションが不要となり、安全に扱えるようになっています
 
+---
+
 ## Generic parameterization of array sizes
 
-* Status: 議論中 (2021/8/20現在)
-* Issue: https://github.com/golang/go/issues/44253
+Status: 議論中 (2021/8/20現在)
 
-配列は長さによって型が異なるので、constraintを簡単に書くことが出来ない。
-これを例外的に許容するための独自の文法を追加する提案です。
+* 配列は長さによって型が異なるので、constraintを簡単に書くことが出来ない
+* これを例外的に許容するための独自の文法を追加する提案
 
 注) 本Proposalの内容は `type list` のままで書かれているので、独自にtype setsで解釈して紹介します。
 
-**配列を受け付けるconstraintの例**
+---
+
+### 配列を受け付けるconstraintの例
 
 ```go
 type IntArray interface {
@@ -601,7 +737,9 @@ func main() {
 }
 ```
 
-**提案されている内容** (をtype setで解釈したもの)
+---
+
+### 提案されている内容 (をtype setで解釈したもの)
 
 ```go
 type IntArray interface {
@@ -620,8 +758,10 @@ func main() {
 }
 ```
 
-また、多重配列 (matrix) のサポートについても提案に含まれています。
-これについては、下記の `len(D)` のようにtype parameterから長さの情報を取得する想定となっています。(個人的には、やや厳しい気がします)
+---
+
+* 多重配列 (matrix) のサポートについても提案に含まれている
+* これについては、下記の `len(D)` のようにtype parameterから長さの情報を取得する想定 (個人的には、やや難しい気がする)
 
 ```go
 type Dim interface {
@@ -635,34 +775,12 @@ func main() {
 }
 ```
 
-## その他 proposal
+---
 
-言語仕様が変わるので、静的解析に使われる go/ast や go/types などに対する変更もProposalが出されており、現在議論中のようです。
-(紹介はWIPです)
+## その他のProposalについて
 
-# おまけ話
+* 言語仕様が変わるので、静的解析に使われる go/ast や go/types などに対する変更もProposalが出されており、現在議論中のようです
 
-## Proposalの探し方
+---
 
-* 基本は、[golang/goのGitHub Issue上](https://github.com/golang/go/issues)で　`Proposal` タグが付いているものを探せばOK
-  - ジェネリクス関係は `generics` タグも付いている
-* [golang/proposal](https://github.com/golang/proposal)宛ての変更としてレビューを先に行ってからIssueがOpenされるものもある (表の `go/ast` の提案がこれに該当)
-  - [Gerrit上で `repo: proposal` のもの](https://go-review.googlesource.com/q/status:open+repo:proposal)を見ると探しやすい
-
-## GoのProposalの議論方法について
-
-* 基本的に [GitHub Discussions](https://github.com/golang/go/discussions/categories/discussions) 上で行われているらしい
-* Discussionには誰でも参加できる形で開かれている
-* Issue上のコメントはタイミングによってContributorのみにロックされていることもある
-  - どちらかと言うとDiscussion側中心で進めて、Issueへのコメントは増やしすぎたくないように見える
-
-## Proposalの主な著者について
-
-* Generics関連の言語仕様については、 `ianlancetaylor` 氏が出しているものが多いようです。
-  - 重要性が高いProposalを多く出しているので、議論中のものに関しても特に注視するのが良さそうです。
-    - Russ Cox氏が出しているmaps packageのproposalも `ianlancetaylor` 氏のDiscussion上での書き込みをconvertしたものでした
-* Generics関連の静的解析についての仕様は、 `findleyr` 氏がほぼ全て出しているようです。
-
-# 最後に
-
-まだまだ議論中のProposalが沢山あるので、随時更新していきたいです！
+## 引き続きProposalの状況を追っていきます！
