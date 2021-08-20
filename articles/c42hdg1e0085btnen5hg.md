@@ -8,7 +8,7 @@ published: true
 
 本記事では、GoのGenerics関連のProposal一覧のまとめと、簡単な解説を行います。
 
-本発表はGo 1.17 リリースパーティーにて発表を行いました。
+本記事の内容を[Go 1.17 リリースパーティー](https://gocon.connpass.com/event/216361/)にて発表しました。
 [スライド版はこちら](https://speakerdeck.com/syumai/gofalsegenericsguan-lian-puropozaruzui-xin-zhuang-kuang-matometojian-dan-najie-shuo-2021nian-8yue-ban)にあります。
 
 # Generics関連のProposal一覧
