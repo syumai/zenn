@@ -363,7 +363,7 @@ func main() {
 #### その他のよく使われそうなconstraintsについて
 
 * Go本体に組み込まれる `any` と `comparable` と言うconstraintもある
-* anyは、全ての型を受け付けるconstraintで、comparableは `比較可能` な型 (`==, !=, <, <=, >, >=` をサポートする型) を受け付けるconstraint
+* anyは、全ての型を受け付けるconstraintで、comparableは `比較可能` な型 (`==, !=` をサポートする型) を受け付けるconstraint (2021/8/21: こちら受け付ける演算子を間違えていたため修正しました)
 * これらと、constraints packageを使い分けながらコードを書いていくことになります
 
 ---
