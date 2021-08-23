@@ -57,14 +57,14 @@ Twitter: [@__syumai](https://twitter.com/__syumai)
 | type sets                                             | **accepted (2021/7/22)** | ianlancetaylor | [#45346](https://github.com/golang/go/issues/45346) | [Gerrit](https://go-review.googlesource.com/c/proposal/+/306689)                                         |
 | constraints package                                   | **accepted (2021/8/19)** | ianlancetaylor | [#45458](https://github.com/golang/go/issues/45458) |                                                                                                          |
 | slices package                                        | **accepted (2021/8/12)** | ianlancetaylor | [#45955](https://github.com/golang/go/issues/45955) |                                                                                                          |
-| maps package                                          | 議論中 (2021/8/20現在)   | rsc            | [#47649](https://github.com/golang/go/issues/47649) |                                                                                                          |
-| sync, sync/atomic: add PoolOf, MapOf, ValueOf         | active (2021/8/20現在)   | ianlancetaylor | [#47657](https://github.com/golang/go/issues/47657) |                                                                                                          |
-| go/ast changes for generics                           | 議論中 (2021/8/20現在)   | findleyr       | [#47781](https://github.com/golang/go/issues/47781) | [Proposal](https://go.googlesource.com/proposal/+/master/design/47781-parameterized-go-ast.md)           |
-| go/types changes for generics                         | 議論中 (2021/8/20現在)   | findleyr       | -                                                   | [Gerrit](https://go-review.googlesource.com/c/proposal/+/328610)                                         |
-| go/parser: add a mode flag to disallow the new syntax | 議論中 (2021/8/20現在)   | findleyr       | [#47783](https://github.com/golang/go/issues/47783) |                                                                                                          |
-| disallow type parameters as RHS of type declarations  | 議論中 (2021/8/20現在)   | findleyr       | [#45639](https://github.com/golang/go/issues/45639) |                                                                                                          |
-| Generic parameterization of array sizes               | 議論中 (2021/8/20現在)   | ajwerner       | [#44253](https://github.com/golang/go/issues/44253) | [Proposal](https://go.googlesource.com/proposal/+/refs/heads/master/design/44253-generic-array-sizes.md) |
-| container/heap package                                | 議論中 (2021/8/20現在)   | cespare        | [#47632](https://github.com/golang/go/issues/47632) |                                                                                                          |
+| maps package                                          | 議論中 (2021/8/24現在)   | rsc            | [#47649](https://github.com/golang/go/issues/47649) |                                                                                                          |
+| sync, sync/atomic: add PoolOf, MapOf, ValueOf         | active (2021/8/24現在)   | ianlancetaylor | [#47657](https://github.com/golang/go/issues/47657) |                                                                                                          |
+| go/ast changes for generics                           | 議論中 (2021/8/24現在)   | findleyr       | [#47781](https://github.com/golang/go/issues/47781) | [Proposal](https://go.googlesource.com/proposal/+/master/design/47781-parameterized-go-ast.md)           |
+| go/types changes for generics                         | 議論中 (2021/8/24現在)   | findleyr       | [#47916](https://github.com/golang/go/issues/47916) | [Proposal](https://go.googlesource.com/proposal/+/master/design/47916-parameterized-go-types.md)         |
+| go/parser: add a mode flag to disallow the new syntax | 議論中 (2021/8/24現在)   | findleyr       | [#47783](https://github.com/golang/go/issues/47783) |                                                                                                          |
+| disallow type parameters as RHS of type declarations  | 議論中 (2021/8/24現在)   | findleyr       | [#45639](https://github.com/golang/go/issues/45639) |                                                                                                          |
+| Generic parameterization of array sizes               | 議論中 (2021/8/24現在)   | ajwerner       | [#44253](https://github.com/golang/go/issues/44253) | [Proposal](https://go.googlesource.com/proposal/+/refs/heads/master/design/44253-generic-array-sizes.md) |
+| container/heap package                                | 議論中 (2021/8/24現在)   | cespare        | [#47632](https://github.com/golang/go/issues/47632) |                                                                                                          |
 
 </div>
 
@@ -515,13 +515,10 @@ func main() {
 
 ---
 
-(2021/8/20時点でacceptedなのはここまで)
-
----
 
 ## maps package
 
-Status: 議論中 (2021/8/20現在)
+Status: 議論中
 
 * ジェネリックなmap操作を行うためのpackageを導入する提案
 
@@ -628,7 +625,7 @@ func main() {
 
 ## sync, sync/atomic: add PoolOf, MapOf, ValueOf 
 
-Status: active (2021/8/20現在)
+Status: active
 
 * sync.Pool / sync.Map / atomic.Valueをジェネリックにする提案
 * これまで、これらは `interface{}` 型の値を受け付けるのみだったが、コンパイル時に型を決定して安全に扱えるようにする
@@ -709,7 +706,7 @@ func Store(c Config) {
 
 ## Generic parameterization of array sizes
 
-Status: 議論中 (2021/8/20現在)
+Status: 議論中
 
 * 配列は長さによって型が異なるので、constraintを簡単に書くことが出来ない
 * これを例外的に許容するための独自の文法を追加する提案
