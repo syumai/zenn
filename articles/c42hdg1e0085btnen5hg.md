@@ -1,5 +1,5 @@
 ---
-title: "GoのGenerics関連プロポーザル最新状況まとめと簡単な解説 (2021年8月版)"
+title: "GoのGenerics関連プロポーザル最新状況まとめと簡単な解説"
 emoji: "☄️"
 type: "tech"
 topics: ["go", "プログラミング", "言語仕様"]
@@ -7,30 +7,30 @@ published: true
 ---
 
 本記事では、GoのGenerics関連のProposal一覧のまとめと、簡単な解説を行います。
+内容については随時更新を行います。
 
-本記事の内容を[Go 1.17 リリースパーティー](https://gocon.connpass.com/event/216361/)にて発表しました。
-[スライド版はこちら](https://speakerdeck.com/syumai/gofalsegenericsguan-lian-puropozaruzui-xin-zhuang-kuang-matometojian-dan-najie-shuo-2021nian-8yue-ban)にあります。
+(本記事の内容を[Go 1.17 リリースパーティー](https://gocon.connpass.com/event/216361/)にて発表しました。)
 
-# Generics関連のProposal一覧
+# Generics関連のProposal一覧 (2021/9/4 更新)
 
 GoのGitHub Issueと、Gerritから見付けたGenerics関連のProposalを表にまとめました。
 
-| Proposal                                              | Status                        | Author         | GitHub Issue                                        | Proposal Document / Gerrit                                                                               |
-| :---------------------------------------------------- | :---------------------------- | :------------- | :-------------------------------------------------- | :------------------------------------------------------------------------------------------------------- |
-| type parameters                                       | **accepted (2021/2/11)**      | ianlancetaylor | [#43651](https://github.com/golang/go/issues/43651) | [Proposal](https://go.googlesource.com/proposal/+/refs/heads/master/design/43651-type-parameters.md)     |
-| type sets                                             | **accepted (2021/7/22)**      | ianlancetaylor | [#45346](https://github.com/golang/go/issues/45346) | [Gerrit](https://go-review.googlesource.com/c/proposal/+/306689)                                         |
-| constraints package                                   | **accepted (2021/8/19)**      | ianlancetaylor | [#45458](https://github.com/golang/go/issues/45458) |                                                                                                          |
-| slices package                                        | **accepted (2021/8/12)**      | ianlancetaylor | [#45955](https://github.com/golang/go/issues/45955) |                                                                                                          |
-| maps package                                          | likely accept (2021/8/28現在) | rsc            | [#47649](https://github.com/golang/go/issues/47649) |                                                                                                          |
-| sync, sync/atomic: add PoolOf, MapOf, ValueOf         | active (2021/8/28現在)        | ianlancetaylor | [#47657](https://github.com/golang/go/issues/47657) |                                                                                                          |
-| container/heap package                                | active (2021/8/28現在)        | cespare        | [#47632](https://github.com/golang/go/issues/47632) |                                                                                                          |
-| sort: generic functions                               | active (2021/8/28現在)        | eliben         | [#47619](https://github.com/golang/go/issues/47619) |                                                                                                          |
-| spec: generics: type parameters on aliases            | active (2021/8/28現在)        | mdempsky       | [#46477](https://github.com/golang/go/issues/46477) |                                                                                                          |
-| go/ast changes for generics                           | 議論中 (2021/8/28現在)        | findleyr       | [#47781](https://github.com/golang/go/issues/47781) | [Proposal](https://go.googlesource.com/proposal/+/master/design/47781-parameterized-go-ast.md)           |
-| go/types changes for generics                         | 議論中 (2021/8/28現在)        | findleyr       | [#47916](https://github.com/golang/go/issues/47916) | [Proposal](https://go.googlesource.com/proposal/+/master/design/47916-parameterized-go-types.md)         |
-| go/parser: add a mode flag to disallow the new syntax | 議論中 (2021/8/28現在)        | findleyr       | [#47783](https://github.com/golang/go/issues/47783) |                                                                                                          |
-| disallow type parameters as RHS of type declarations  | 議論中 (2021/8/28現在)        | findleyr       | [#45639](https://github.com/golang/go/issues/45639) |                                                                                                          |
-| Generic parameterization of array sizes               | 議論中 (2021/8/28現在)        | ajwerner       | [#44253](https://github.com/golang/go/issues/44253) | [Proposal](https://go.googlesource.com/proposal/+/refs/heads/master/design/44253-generic-array-sizes.md) |
+| Proposal                                              | Status                   | Author         | GitHub Issue                                        | Proposal Document / Gerrit                                                                               |
+| :---------------------------------------------------- | :----------------------- | :------------- | :-------------------------------------------------- | :------------------------------------------------------------------------------------------------------- |
+| type parameters                                       | **accepted (2021/2/11)** | ianlancetaylor | [#43651](https://github.com/golang/go/issues/43651) | [Proposal](https://go.googlesource.com/proposal/+/refs/heads/master/design/43651-type-parameters.md)     |
+| type sets                                             | **accepted (2021/7/22)** | ianlancetaylor | [#45346](https://github.com/golang/go/issues/45346) | [Gerrit](https://go-review.googlesource.com/c/proposal/+/306689)                                         |
+| constraints package                                   | **accepted (2021/8/19)** | ianlancetaylor | [#45458](https://github.com/golang/go/issues/45458) |                                                                                                          |
+| slices package                                        | **accepted (2021/8/12)** | ianlancetaylor | [#45955](https://github.com/golang/go/issues/45955) |                                                                                                          |
+| maps package                                          | active                   | rsc            | [#47649](https://github.com/golang/go/issues/47649) |                                                                                                          |
+| sync, sync/atomic: add PoolOf, MapOf, ValueOf         | active                   | ianlancetaylor | [#47657](https://github.com/golang/go/issues/47657) |                                                                                                          |
+| container/heap package                                | active                   | cespare        | [#47632](https://github.com/golang/go/issues/47632) |                                                                                                          |
+| sort: generic functions                               | active                   | eliben         | [#47619](https://github.com/golang/go/issues/47619) |                                                                                                          |
+| spec: generics: type parameters on aliases            | active                   | mdempsky       | [#46477](https://github.com/golang/go/issues/46477) |                                                                                                          |
+| go/ast changes for generics                           | 議論中                   | findleyr       | [#47781](https://github.com/golang/go/issues/47781) | [Proposal](https://go.googlesource.com/proposal/+/master/design/47781-parameterized-go-ast.md)           |
+| go/types changes for generics                         | 議論中                   | findleyr       | [#47916](https://github.com/golang/go/issues/47916) | [Proposal](https://go.googlesource.com/proposal/+/master/design/47916-parameterized-go-types.md)         |
+| go/parser: add a mode flag to disallow the new syntax | 議論中                   | findleyr       | [#47783](https://github.com/golang/go/issues/47783) |                                                                                                          |
+| disallow type parameters as RHS of type declarations  | 議論中                   | findleyr       | [#45639](https://github.com/golang/go/issues/45639) |                                                                                                          |
+| Generic parameterization of array sizes               | 議論中                   | ajwerner       | [#44253](https://github.com/golang/go/issues/44253) | [Proposal](https://go.googlesource.com/proposal/+/refs/heads/master/design/44253-generic-array-sizes.md) |
 
 # 各Proposalの紹介
 
