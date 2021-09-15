@@ -39,14 +39,14 @@ Website: https://syum.ai
 
 ---
 
-## 本発表における `安全` の定義とは？
-
----
-
 ## 前提
 
 * 提供するアプリケーション上で、ユーザーが、自身の書いたスクリプトを**自身のページ内**で実行することを出来るようにしたい
-  - 不特定多数の目にスクリプトが触れるような使い方はしない
+  - 不特定多数の人がスクリプトを実行するような使い方はしない
+
+---
+
+# 本発表における `安全` の定義とは？
 
 ---
 
@@ -67,19 +67,18 @@ Website: https://syum.ai
 
 ## 実行したいスクリプトの例
 
-* 下記のようなObjectの加工を行って、結果を画面に表示したい
-
 **加工前のObjectを保持する変数**
 ```js
 const data = { a: 1, b: 2, c: 3 };
 ```
 
-**ユーザー入力スクリプト**
+**ユーザー入力スクリプト** (Objectを加工する)
+
 ```js
 { a: data.a, c: data.c * 2 }
 ```
 
-**表示**
+**結果** (HTMLとして表示)
 
 <small>
 <table>
@@ -201,7 +200,7 @@ const a = 2;
 const b = 3;
 
 const sum = new Function("x", "y", "return x + y;");
-sum(a, b); // => 6
+sum(a, b); // => 5
 
 // `new` を書かなくても同様に使える
 const sum2 = Function("x", "y", "return x + y;");
@@ -257,24 +256,15 @@ console.log(
 
 ---
 
-## 本発表における `安全` の定義 (再)
+## Function() は `安全` の定義を満たすか
 
-* **アプリケーションの動作が破壊されないこと**
+* アプリケーションの動作が破壊されないこと
   - ユーザー入力スクリプトを実行することで、提供するアプリケーションのDOMが変更されない
+    - => **変更できる**
+      - window Objectを参照可能なので、自由にDOMを追加したり、操作したりできる
   - アプリケーションの状態の変更が行われない
-    - => localStorage / sessionStorageなどの内容の書き換えが発生しない
-
----
-
-## Function() はこれを満たすか
-
-* ユーザー入力スクリプトを実行することで、提供するアプリケーションのDOMが変更されない
-  - => **変更できる**
-    - window Objectを参照可能なので、globalに行える操作は何でもできる
-    - 自由にDOMを追加したり、操作したりできる
-* アプリケーションの状態の変更が行われない
-  - => **変更できる**
-    - アプリケーションと同じページ上のscriptとして動作するので、localStorage / sessionStorageなどを自由に書き換えできる
+    - => **変更できる**
+      - アプリケーションと同じページ上で動作するので、localStorage / sessionStorageなどを自由に書き換えできる
 
 => **満たしていない**
 
@@ -290,39 +280,15 @@ console.log(
 
 ## どうすれば安全にできるか？
 
-* ユーザー入力スクリプトを実行することで、提供するアプリケーションのDOMが変更されない
-  - window Objectを参照可能なので、globalに行える操作は何でもできる
+* window Objectを参照可能なので、自由にDOMを追加したり、操作したりできる
+  - <font color="red">**window Objectの危険なプロパティを参照できないようにすれば、DOMを操作できなくなる**</font>
+* アプリケーションと同じページ上で動作するので、localStorage / sessionStorageなどを自由に書き換えできる
+  - <font color="red">**localStorage / sessionStorageなどを参照出来ない場所でscriptを実行すれば書き換えられない**</font>
 
 ---
-
-## どうすれば安全にできるか？
-
-* ユーザー入力スクリプトを実行することで、提供するアプリケーションのDOMが変更されない
-  - window Objectを参照可能なので、globalに行える操作は何でもできる
-    - <font color="red">**window Objectを参照できないようにすれば、DOMを操作できなくなる**</font>
-
----
-
-## どうすれば安全にできるか？
-
-* アプリケーションの状態の変更が行われない
-  - アプリケーションと同じページ上のscriptとして動作するので、localStorage / sessionStorageなどを自由に書き換えできる
-
----
-
-## どうすれば安全にできるか？
-
-* アプリケーションの状態の変更が行われない
-  - アプリケーションと同じページ上のscriptとして動作するので、localStorage / sessionStorageなどを自由に書き換えできる
-    - <font color="red">**localStorage / sessionStorageなどを参照出来ない場所でscriptを実行する**</font>
-
----
-
-- window Objectを参照できないようにすれば、DOMを操作できなくなる
-- localStorage / sessionStorageなどを参照出来ない場所でscriptを実行する
 
 これらを満たすには？
-結論として、<font size="48"><b>別Originでscriptを実行すればOK！</b></font>
+=> <font size="48"><b>別Originでscriptを実行すればOK！</b></font>
 
 ---
 
@@ -371,7 +337,7 @@ same-site/cross-site, same-origin/cross-originをちゃんと理解する: https
 
 * iframe, window.openなどで得られる
 
-例
+参照取得方法の例
 
 | 経路                      | 親 => 子             | 子 => 親      |
 | :------------------------ | :------------------- | :------------ |
@@ -384,16 +350,16 @@ same-site/cross-site, same-origin/cross-originをちゃんと理解する: https
 ## Window Objectを経由したプロパティアクセス
 
 同一Originの例
-* https://a.example.com/index.html に https://a.example.com/iframe.html を埋め込む
+* https://a.com/index.html に https://a.com/iframe.html を埋め込む
 
-**https://a.example.com/index.html のHTML**
+**https://a.com/index.html のHTML**
 
 ```html
-<iframe src="https://a.example.com/iframe.html">
+<iframe src="https://a.com/iframe.html">
 </iframe>
 ```
 
-**https://a.example.com/iframe.html のHTML**
+**https://a.com/iframe.html のHTML**
 
 ```html
 <script>
@@ -401,23 +367,23 @@ same-site/cross-site, same-origin/cross-originをちゃんと理解する: https
 </script>
 ```
 
-=> https://a.example.com を表示すると、 `kaboom!💣` と画面に表示される
+=> https://a.com/index.html を表示すると、 `kaboom!💣` と画面に表示される
 
 ---
 
 ## Window Objectを経由したプロパティアクセス
 
 別Originの例
-* https://a.example.com/index.html に https://b.example.com/iframe.html を埋め込む
+* https://a.com/index.html に https://b.com/iframe.html を埋め込む
 
-**https://a.example.com/index.html のHTML**
+**https://a.com/index.html のHTML**
 
 ```html
-<iframe src="https://b.example.com/iframe.html">
+<iframe src="https://b.com/iframe.html">
 </iframe>
 ```
 
-**https://b.example.com/iframe.html のHTML**
+**https://b.com/iframe.html のHTML**
 
 ```html
 <script>
@@ -425,11 +391,11 @@ same-site/cross-site, same-origin/cross-originをちゃんと理解する: https
 </script>
 ```
 
-=> **例外が発生する**。内容: `DOMException: Blocked a frame with origin "https://b.example.com" from accessing a cross-origin frame.`
+=> **例外が発生する**。内容: `DOMException: Blocked a frame with origin "https://b.com" from accessing a cross-origin frame.`
 
 ---
 
-## Window Objectを経由したプロパティアクセス
+## Cross originでのWindow Objectの挙動
 
 * ごく一部を除いて、基本全てのプロパティへのアクセスが禁じられる
   - **ユーザー入力スクリプトを実行することで、提供するアプリケーションのDOMが変更されない** と言う条件を満たすのに使えそう！
@@ -475,7 +441,7 @@ same-site/cross-site, same-origin/cross-originをちゃんと理解する: https
 
 * sandbox属性はホワイトリスト形式
   - デフォルトは全て不許可
-  - 実は、 `allow-popups` や `allow-modals` なども存在する
+  - 実は、 `allow-popups` なども存在する
     - 入力スクリプトによる `window.alert` などの実行をセットで防げる
 
 ---
@@ -520,14 +486,14 @@ function execScript(script) {
 
 iframeの例
 
-**親Window** (https://a.example.com)
+**親Window** (https://a.com)
 
 ```js
-const iframe = ...
-iframe.contentWindow.postMessage({ message: "hello!" }, "https://b.example.com");
+const iframe = ... // https://b.com を埋め込んだiframeを取得する
+iframe.contentWindow.postMessage({ message: "hello!" }, "https://b.com");
 ```
 
-**子Window** (https://b.example.com)
+**子Window** (https://b.com)
 
 ```js
 window.addEventListener("message", (event) => {
@@ -545,8 +511,8 @@ window.addEventListener("message", (event) => {
 
 ```js
 window.addEventListener("message", (event) => {
-  // https://a.example.com から受け付けたmessageしか処理しない！
-  if (event.origin !== "https://a.example.com") {
+  // https://a.com から受け付けたmessageしか処理しない！
+  if (event.origin !== "https://a.com") {
     return;
   }
   // iframeの親Windowから受け付けたmessageしか処理しない！
@@ -701,8 +667,8 @@ https://github.com/syumai/sandboxed-eval
 
 # まとめ
 
-* ユーザー入力スクリプトの実行でアプリケーションの動作を破壊されないようにするには、別OriginのWindowが使える
-* 別OriginのWindow Objectを入手するには、sandbox属性を設定したiframeを使うのが都合が良い
+* ユーザー入力スクリプトの安全な実行には別OriginのWindowが使える
+* 別OriginのWindowは、iframe sandboxで簡単に使える
 * Window Object間のmessage 送受信にはpostMessageが使える
 
 ---
