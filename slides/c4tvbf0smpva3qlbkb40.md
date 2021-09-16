@@ -75,7 +75,7 @@ const data = { a: 1, b: 2, c: 3 };
 **ユーザー入力スクリプト** (Objectを加工する)
 
 ```js
-{ a: data.a, c: data.c * 2 }
+{ a: data.a * 2, c: data.c * 2 }
 ```
 
 **結果** (HTMLとして表示)
