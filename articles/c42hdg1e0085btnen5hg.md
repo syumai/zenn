@@ -34,6 +34,11 @@ GoのGitHub Issueと、Gerritから見付けたGenerics関連のProposalを表�
 | Generic parameterization of array sizes                                        | 議論中                   | ajwerner       | [#44253](https://github.com/golang/go/issues/44253) | [Proposal](https://go.googlesource.com/proposal/+/refs/heads/master/design/44253-generic-array-sizes.md) |
 | container/heap package                                                         | hold                     | cespare        | [#47632](https://github.com/golang/go/issues/47632) |                                                                                                          |
 
+## Discussions
+
+* [constraints: new package to define standard type parameter constraints](https://github.com/golang/go/discussions/47319)
+* [container/set: new package to provide a generic set type](https://github.com/golang/go/discussions/47331)
+
 # 各Proposalの紹介
 
 type parameters / type setsについては他に優れた資料があるので、ここでは内容に踏み込まず簡単な紹介に留めます。
