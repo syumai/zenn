@@ -11,7 +11,7 @@ published: true
 
 (本記事の内容を[Go 1.17 リリースパーティー](https://gocon.connpass.com/event/216361/)にて発表しました。)
 
-# Generics関連のProposal一覧 (2021/9/23 更新)
+# Generics関連のProposal一覧 (2021/10/10 更新)
 
 GoのGitHub Issueと、Gerritから見付けたGenerics関連のProposalを表にまとめました。
 
@@ -25,7 +25,7 @@ GoのGitHub Issueと、Gerritから見付けたGenerics関連のProposalを表�
 | maps package                                                                   | **accepted (2021/9/23)** | rsc            | [#47649](https://github.com/golang/go/issues/47649) |                                                                                                          |
 | sort: generic functions                                                        | **accepted (2021/9/23)** | eliben         | [#47619](https://github.com/golang/go/issues/47619) |                                                                                                          |
 | spec: generics: type parameters on aliases                                     | **accepted (2021/9/23)** | mdempsky       | [#46477](https://github.com/golang/go/issues/46477) |                                                                                                          |
-| spec: allow eliding interface{ } in constraint literals                        | active                   | fzipp          | [#48424](https://github.com/golang/go/issues/48424) |                                                                                                          |
+| spec: allow eliding interface{ } in constraint literals                        | likely accept            | fzipp          | [#48424](https://github.com/golang/go/issues/48424) |                                                                                                          |
 | sync, sync/atomic: add PoolOf, MapOf, ValueOf                                  | active                   | ianlancetaylor | [#47657](https://github.com/golang/go/issues/47657) |                                                                                                          |
 | go/types changes for generics                                                  | active                   | findleyr       | [#47916](https://github.com/golang/go/issues/47916) | [Proposal](https://go.googlesource.com/proposal/+/master/design/47916-parameterized-go-types.md)         |
 | constraints: add ReadOnlyChan and WriteOnlyChan                                | incoming                 | ianlancetaylor | [#48366](https://github.com/golang/go/issues/48366) |                                                                                                          |
