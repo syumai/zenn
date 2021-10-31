@@ -11,7 +11,7 @@ published: true
 
 (本記事の内容を[Go 1.17 リリースパーティー](https://gocon.connpass.com/event/216361/)にて発表しました。)
 
-# Generics関連のProposal一覧 (2021/10/24 更新)
+# Generics関連のProposal一覧 (2021/10/31 更新)
 
 GoのGitHub Issueと、Gerritから見付けたGenerics関連のProposalを表にまとめました。
 
@@ -27,12 +27,14 @@ GoのGitHub Issueと、Gerritから見付けたGenerics関連のProposalを表�
 | spec: generics: type parameters on aliases                                     | **accepted (2021/9/23)**  | mdempsky       | [#46477](https://github.com/golang/go/issues/46477) |                                                                                                          |
 | spec: allow eliding interface{ } in constraint literals                        | **accepted (2021/10/14)** | fzipp          | [#48424](https://github.com/golang/go/issues/48424) |                                                                                                          |
 | go/types changes for generics                                                  | **accepted (2021/10/14)** | findleyr       | [#47916](https://github.com/golang/go/issues/47916) | [Proposal](https://go.googlesource.com/proposal/+/master/design/47916-parameterized-go-types.md)         |
-| sync, sync/atomic: add PoolOf, MapOf, ValueOf                                  | active                    | ianlancetaylor | [#47657](https://github.com/golang/go/issues/47657) |                                                                                                          |
-| cmd/vet: warn if a method receiver uses known type-name as type parameter name | likely decline            | bcmills        | [#48123](https://github.com/golang/go/issues/48123) |                                                                                                          |
-| disallow type parameters as RHS of type declarations                           | 議論中                    | findleyr       | [#45639](https://github.com/golang/go/issues/45639) |                                                                                                          |
-| Generic parameterization of array sizes                                        | 議論中                    | ajwerner       | [#44253](https://github.com/golang/go/issues/44253) | [Proposal](https://go.googlesource.com/proposal/+/refs/heads/master/design/44253-generic-array-sizes.md) |
+| context: add generic Key type                                                  | incoming                  | dsnet          | [#49189](https://github.com/golang/go/issues/49189) |                                                                                                          |
+| reconsider lack of compile time type assertions ...                            | incoming                  | SamWhited      | [#49206](https://github.com/golang/go/issues/49206) |                                                                                                          |
 | container/heap package                                                         | hold                      | cespare        | [#47632](https://github.com/golang/go/issues/47632) |                                                                                                          |
+| sync, sync/atomic: add PoolOf, MapOf, ValueOf                                  | hold                      | ianlancetaylor | [#47657](https://github.com/golang/go/issues/47657) |                                                                                                          |
+| Generic parameterization of array sizes                                        | hold                      | ajwerner       | [#44253](https://github.com/golang/go/issues/44253) | [Proposal](https://go.googlesource.com/proposal/+/refs/heads/master/design/44253-generic-array-sizes.md) |
 | constraints: add ReadOnlyChan and WriteOnlyChan                                | closed (#48424で表現可能) | ianlancetaylor | [#48366](https://github.com/golang/go/issues/48366) |                                                                                                          |
+| disallow type parameters as RHS of type declarations                           | closed                    | findleyr       | [#45639](https://github.com/golang/go/issues/45639) |                                                                                                          |
+| cmd/vet: warn if a method receiver uses known type-name as type parameter name | declined                  | bcmills        | [#48123](https://github.com/golang/go/issues/48123) |                                                                                                          |
 
 ## Discussions
 
@@ -42,6 +44,7 @@ GoのGitHub Issueと、Gerritから見付けたGenerics関連のProposalを表�
 ## その他読むべきIssue
 
 * [go: don't change the libraries in 1.18](https://github.com/golang/go/issues/48918)
+  - constraints package以外はexp package配下での実装となることで決着: https://github.com/golang/go/issues/48918#issuecomment-953349439
 
 # 各Proposalの紹介
 
