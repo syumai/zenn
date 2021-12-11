@@ -11,7 +11,7 @@ published: true
 
 (本記事の内容を[Go 1.17 リリースパーティー](https://gocon.connpass.com/event/216361/)にて発表しました。)
 
-# Generics関連のProposal一覧 (2021/11/22 更新)
+# Generics関連のProposal一覧 (2021/12/11 更新)
 
 GoのGitHub Issueと、Gerritから見付けたGenerics関連のProposalを表にまとめました。
 
@@ -27,7 +27,7 @@ GoのGitHub Issueと、Gerritから見付けたGenerics関連のProposalを表�
 | spec: generics: type parameters on aliases                                     | **accepted (2021/9/23)**  | mdempsky       | [#46477](https://github.com/golang/go/issues/46477) |                                                                                                            |
 | spec: allow eliding interface{ } in constraint literals                        | **accepted (2021/10/14)** | fzipp          | [#48424](https://github.com/golang/go/issues/48424) |                                                                                                            |
 | go/types changes for generics                                                  | **accepted (2021/10/14)** | findleyr       | [#47916](https://github.com/golang/go/issues/47916) | [Design Doc](https://go.googlesource.com/proposal/+/master/design/47916-parameterized-go-types.md)         |
-| add another constraint like comparable but excluding interface types           | incoming                  | Code-Hex       | [#49587](https://github.com/golang/go/issues/49587) |                                                                                                            |
+| add another constraint like comparable but excluding interface types           | likely decline            | Code-Hex       | [#49587](https://github.com/golang/go/issues/49587) |                                                                                                            |
 | container/heap package                                                         | hold                      | cespare        | [#47632](https://github.com/golang/go/issues/47632) |                                                                                                            |
 | sync, sync/atomic: add PoolOf, MapOf, ValueOf                                  | hold                      | ianlancetaylor | [#47657](https://github.com/golang/go/issues/47657) |                                                                                                            |
 | Generic parameterization of array sizes                                        | hold                      | ajwerner       | [#44253](https://github.com/golang/go/issues/44253) | [Design Doc](https://go.googlesource.com/proposal/+/refs/heads/master/design/44253-generic-array-sizes.md) |
