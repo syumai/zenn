@@ -3,7 +3,7 @@ title: "Go 1.18 で interface{} の代わりに any が使えるようになる�
 emoji: "️🌠"
 type: "tech"
 topics: ["Go"]
-published: false
+published: true
 ---
 
 こちらはGo Advent Calendar 12日目の記事です。
@@ -33,7 +33,7 @@ https://tip.golang.org/ref/spec#Predeclared_identifiers
 
 ## any の使い方
 
-先述の通り、 `any` は `interface{}` の型エイリアスなので、 `interface{}` が登場しうる箇所で使用できます。
+前述の通り、 `any` は `interface{}` の型エイリアスなので、 `interface{}` が登場しうる箇所で使用できます。
 
 例えば、変数宣言、構造体のフィールド宣言、関数のパラメータの宣言などで型として `any` を指定できます。
 
@@ -111,7 +111,7 @@ func main() {
 
 上記の通り、 `any` は `interface{}` の代替として使えますし、混在していても問題がありません。
 
-[sg0hsmtさんの記事](https://qiita.com/sg0hsmt/items/06449d7ec8382b68d457)で紹介されているように、Go 本体ソースコード内で使われている `interface{}` を全て `any` に書き換える提案が行われています。
+[sg0hsmtさんの記事](https://qiita.com/sg0hsmt/items/06449d7ec8382b68d457)で紹介されているように、Go 本体のソースコード内で使われている `interface{}` を全て `any` に書き換える Issue が出ています。
 この変更は、あくまで Go 1.18 に対して行われるものですし、ここで説明した通り破壊的変更となる内容ではありません。
 https://github.com/golang/go/issues/49884
 
@@ -143,7 +143,7 @@ Rewriting it one way or another to remove the text 'interface{}' would give peop
 
 といった内容となります。
 
-これはあくまで一例ではありますが、 `interface{}` をコードから削除するべきかどうか判断する材料として使ってみてください。
+これはあくまで一例ではありますが、 `interface{}` をコードから削除する際の判断材料として使ってみてください。
 
 ### `interface{}` を一括して `any` に置き換える
 
@@ -154,4 +154,4 @@ gofmt -w -r 'interface{} -> any' .
 ```
 
 以上、 `any` をコード中で使う方法や、置き換えていく方法について説明しました。
-よかったら参考にしてみてください。
+もしよければ参考にしてみてください。
