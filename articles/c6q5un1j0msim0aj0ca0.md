@@ -166,41 +166,41 @@ func First(s []interface{}) interface{} {
 
 ```go
 a := []int{1,2,3}
-// `[]interface{}` ではなく `[]int{}` が渡されている。
-// 代入不可なためコンパイル出来ない
-first := First(a)
+// `[]int{}` は `[]interface{}` に代入不可
+first := First(a) // NG
 
 ---
 
+// 値を `[]interface{}` に詰め替える
 a := []int{1,2,3}
-// `[]interface{}` 型のスライスを用意して値を詰め替える
-s := make([]interface, len(a))
+s := make([]interface{}, len(a))
 for i, v := range a {
   s[i] = v
 }
-// `s` の型は `[]interface{}` なので OK
-first := First(s)
+first := First(s) // OK
 ```
 
 この `First` 関数が行いたかったのは、任意の要素型を持つスライスから、最初の要素を取り出すことでした。
 こうしたケースでは、`interface{}` を `any` に単純置換するのではなく、ジェネリクスを使った方がよいでしょう。
 
 ```go
-// ❌: 単純置換しただけでは、本来実現したかった機能を提供出来ていない
+// ❌: 単純置換。元の関数と同じ挙動となる
 func First(s []any) any {
   return s[0]
 }
 
 ---
 
-// ⭕: 任意の型のスライスを受け取って、その要素型で値を返すことが出来る
+// ⭕: 任意の型のスライスを受け取って、
+//      その要素型で値を返すことが出来る
 func First[S ~[]Elem, Elem any](s S) Elem {
   return s[0]
 }
 
 func main() {
   a := []int{1,2,3}
-  // ジェネリクス版では、そのまま `a` を渡すことができ、int型で値が返る
+  // ジェネリクス版 `First` の呼び出し
+  // `a` を渡すことができ、int型の値が返る
   first := First(a)
   ...
 }
@@ -243,13 +243,15 @@ func Store[T any](key string, value T) {
 }
 
 func Load[T any](key string) T {
-  v := storage[key] // vの型は `interface{}`
-  return v.(T)      // vの動的型が `T` でなければ panic する
+  v := storage[key]
+  return v.(T) // `T` 型で型アサーションする
 }
 
 func main() {
-  Store("a", 1)          // int型の値を保存
-  v := Load[string]("a") // int型の値をstring型として取り出そうとしたのでpanicする
+  // int 型の値を保存
+  Store("a", 1)
+  // int 型の値を string 型で取得出来ず panic する
+  v := Load[string]("a")
   ...
 }
 ```
