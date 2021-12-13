@@ -247,8 +247,8 @@ func Load[T any](key string) T {
 }
 
 func main() {
-	Store("a", 1)          // int型の値を保存
-	v := Load[string]("a") // int型の値をstring型として取り出そうとしたのでpanicする
+  Store("a", 1)          // int型の値を保存
+  v := Load[string]("a") // int型の値をstring型として取り出そうとしたのでpanicする
   ...
 }
 ```
