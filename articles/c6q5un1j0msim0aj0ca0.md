@@ -60,11 +60,13 @@ func F(v any) (result any) {
 `any` は、 この `interface{}` を型制約に繰り返し書かなくて済むよう、利便性のために追加されています。
 
 ```go
-func F1[T any](v T) T { // `any` の箇所が型パラメータ `T` に対する型制約
+// `any` の箇所が型パラメータ `T` に対する型制約
+func F1[T any](v T) T {
   return v
 }
 
-func F2[T interface{}](v T) T { // `[T any]` と同じ意味
+// `[T any]` と同じ意味
+func F2[T interface{}](v T) T {
   return v
 }
 ```
@@ -88,7 +90,8 @@ func OldFunc(v interface{}) {
 func main() {
   var v any
   v = 1
-  OldFunc(v) // `interface{}` を受け付ける関数に `any` を渡すことは何も問題ない
+  // `interface{}` を受け付ける関数に `any` を渡すことは問題ない
+  OldFunc(v) // OK
 }
 ```
 
@@ -101,10 +104,12 @@ type OldInterface interface {
 
 type S struct{}
 
-func (s S) M(v any) {} // `interface{}` ではなく `any` を使う
+// `interface{}` ではなく `any` を使う
+func (s S) M(v any) {}
 
 func main() {
-  var v OldInterface = S{} // ok: S は OldInterface を実装している
+  // S は OldInterface を実装している
+  var v OldInterface = S{} // OK
   ...
 }
 ```
@@ -166,7 +171,7 @@ func First(s []interface{}) interface{} {
 
 ```go
 a := []int{1,2,3}
-// `[]int{}` は `[]interface{}` に代入不可
+// `[]int` は `[]interface{}` に代入不可
 first := First(a) // NG
 
 ---
