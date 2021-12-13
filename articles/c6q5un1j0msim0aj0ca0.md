@@ -243,7 +243,7 @@ func Store[T any](key string, value T) {
 
 func Load[T any](key string) T {
   v := storage[key] // vの型は `interface{}`
-  return v.(T)      // vの型が `T` でなければ panic する
+  return v.(T)      // vの動的型が `T` でなければ panic する
 }
 
 func main() {
