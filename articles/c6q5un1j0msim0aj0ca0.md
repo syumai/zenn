@@ -144,7 +144,7 @@ Rewriting it one way or another to remove the text 'interface{}' would give peop
 
 といった内容となります。
 
-どういった場合にジェネリクスを使った方がよいか、もしくは `any` に単純置換した方がよいか、例を示します。
+では、どういった場合にジェネリクスを使った方がよい、もしくは `any` に単純置換した方がよいと言えるでしょうか？
 
 ### ジェネリクスを使った方がよいケース
 
