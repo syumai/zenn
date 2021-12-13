@@ -6,7 +6,7 @@ topics: ["Go"]
 published: true
 ---
 
-こちらはGo Advent Calendar 12日目の記事です。
+こちらは[Go Advent Calendar](https://qiita.com/advent-calendar/2021/go) 12日目の記事です。
 
 Go 1.18 で interface{} の代わりに any が使えるようになるという話が出ていたので、これの使い方について書いてみようと思います。
 
