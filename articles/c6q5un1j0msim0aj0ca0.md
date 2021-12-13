@@ -231,7 +231,31 @@ func Load(key string) interface{} {
 `value` として渡ってくる値は、文字列かもしれないし、整数かも知れないし、何かしらの構造体かも知れません。
 こうした、数え切れない種類の型の値を保存し、返す必要があるようなケースでは、型パラメータを使い関数をジェネリックにするメリットがありません。
 
-先ほどのコード中の `interface{}` を `any` に置き換えたコードを示します。
+例えば、 `Store` と `Load` をそれぞれジェネリックにしたとしても、保存先の map の要素型は `interface{}` なので、Loadの際に型アサーションが必要になってしまいます。
+型アサーションに失敗するとpanicしてしまうので、 `interface{}` 型の値をそのまま扱っているのと差がありません。
+
+```go
+var storage = map[string]interface{}{}
+
+func Store[T any](key string, value T) {
+  storage[key] = value
+}
+
+func Load[T any](key string) T {
+  v := storage[key] // vの型は `interface{}`
+  return v.(T)      // vの型が `T` でなければ panic する
+}
+
+func main() {
+	Store("a", 1)          // int型の値を保存
+	v := Load[string]("a") // int型の値をstring型として取り出そうとしたのでpanicする
+  ...
+}
+```
+
+https://go.dev/play/p/p_f4U7cxS2P?v=gotip
+
+最終的に、先ほどのコード中の `interface{}` を `any` に置き換えたコードを示します。
 
 ```go
 var storage = map[string]any{}
