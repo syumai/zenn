@@ -266,10 +266,12 @@ func main() {
 #### その他のよく使われそうなconstraintsについて
 
 他によく使われそうなconstraintsとしては、Go本体により提供される `any` と `comparable` があります。
-anyは、全ての型を受け付ける制約で、comparableは `比較可能` な型 (==, !=, <, <=, >, >= をサポートする型) を受け付ける制約です。
+anyは、全ての型を受け付ける制約で、comparableは [`比較可能`](https://go.dev/ref/spec#Comparison_operators) な型 (==, != をサポートする型) を受け付ける制約です。
 これは事前宣言された識別子に紐付く型として、Goに組み込まれます (packageとしての提供ではありません)。
 
-Orderedとcomparableはかなり紛らわしいですが、[その違いは、comparableがinterface型を含む (ただし `==` で比較するとpanicする) こと](https://github.com/golang/go/issues/45458#issuecomment-828784686)らしいです。
+:::message
+2022/2/7追記: comparable の定義の間違いについて [behiron](https://zenn.dev/behiron) さんから指摘をいただき修正を行いました。ありがとうございます！
+:::
 
 ## slices package
 
