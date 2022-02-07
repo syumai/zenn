@@ -46,7 +46,9 @@ GoのGitHub Issueと、Gerritから見付けたGenerics関連のProposalを表�
 ## その他読むべきIssue
 
 * [go: don't change the libraries in 1.18](https://github.com/golang/go/issues/48918)
-  - constraints package以外はexp package配下での実装となることで決着: https://github.com/golang/go/issues/48918#issuecomment-953349439
+  - constraints package 以外は exp package 配下での実装となることで決着: https://github.com/golang/go/issues/48918#issuecomment-953349439
+    - (2022/2/7追記) 更に、 constraints package も exp package 配下での実装となった: https://github.com/golang/go/issues/50792
+      - Generics 導入に伴う標準ライブラリの変更は Go 1.18 では完全に無くなった
 
 # 各Proposalの紹介
 
