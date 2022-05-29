@@ -6,7 +6,7 @@ topics: ["Go", "Cloudflare Workers"]
 published: false
 ---
 
-Cloudflare Workersで簡単にGoのHTTPサーバーを動かすためのライブラリを作ったので、こちらの紹介をさせていただきます。(まだかなり実験的な内容です)
+Cloudflare Workersで簡単にGoのHTTPサーバーを動かすためのライブラリを作ったので、こちらの紹介をさせていただきます。(まだかなり実験的な実装です)
 
 https://github.com/syumai/workers
 
