@@ -113,8 +113,8 @@ DenoのReader / WriterはGoのio packageを参考に作られたもので、近�
 
 [Streamの変換処理の実装はこの辺りのコード](https://github.com/syumai/workers/blob/v0.2.0/stream.go)で行っています。
 
-ところどころで、Go側からJSのPromiseをawaitするようなユーティリティ関数を呼んだりしています。
-こちらは、チャネルを使ってPromiseの非同期処理の結果を待ち受ける実装になっています。
+ところどころで、Go側からJSのPromiseをawaitするような処理が入っていたりします。
+チャネルを使ってPromiseの非同期処理の結果を待ち受ける実装になっていて、streamの処理以外でも必要になったのでユーティリティ関数として切り出しています。
 
 https://github.com/syumai/workers/blob/v0.2.0/jsutil.go#L39-L62
 
