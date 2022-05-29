@@ -13,7 +13,7 @@ https://github.com/syumai/workers
 ## 特徴
 
 * http.Handlerを作って、 `worker.Serve` に渡すだけでCloudflare Workers上でHTTPサーバーとして動作する
-* 必要なツールはtinygoとwrangler (Cloudflare WorkersのCLI) だけ
+* 必要なツールは[tinygo](https://tinygo.org/)と[wrangler](https://developers.cloudflare.com/workers/wrangler/) (Cloudflare WorkersのCLI) だけ
 * JavaScript側のコードを触る必要が無い
 * Cloudflare R2のバインディング（一部）を提供している
   - 今後、KV等の対応も頑張る予定
@@ -167,7 +167,7 @@ https://github.com/syumai/workers/tree/main/examples/simple-json-server
 
 ひとまずベーシック認証が動作するだけのWorkerのサンプルは出来ましたが、あんまり実用性は無いような感じがします。
 
-https://github.com/syumai/workers/tree/5c55a2ebf7f7a4149dcd88474c71cd0a1c1b371a/examples/basic-auth-server
+https://github.com/syumai/workers/blob/v0.2.0/examples/basic-auth-server
 
 ### 現状 Cloudflare R2 はどれくらい使えるのか？
 
