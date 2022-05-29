@@ -210,7 +210,7 @@ putの処理は、ReadableStreamの実装ではPromiseが永遠に解決され�
 
 以前DenoとGoのioインタフェースを相互変換するpackageを作った時は、GoのコードをWasmにコンパイルして、JS側でtestを実行するような形で書いていたので、このような雰囲気で進めようかなと思っています。
 
-https://github.com/syumai/denoio/blob/99abe35fbe76d8f6313d3bbed61a543b89d7830c/test/test.js
+https://github.com/syumai/denoio/tree/99abe35fbe76d8f6313d3bbed61a543b89d7830c/test
 
 ## おわりに
 
