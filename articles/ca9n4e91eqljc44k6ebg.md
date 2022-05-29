@@ -106,10 +106,10 @@ https://github.com/syumai/workers/blob/v0.2.0/examples/simple-json-server/worker
 ### ストリームの変換
 
 ストリームの変換は、[deno_stdのコード](https://deno.land/std@0.139.0/streams/conversion.ts)を参考にしました。
-DenoのReader / WriterはGoのio packageを参考に作られたもので、近年のWeb API追従に伴って、WHATWG Streamとの相互変換が必要なシーンが増えていました。
+DenoのReader / WriterはGoのio packageを参考に作られたもので、近年のWeb APIへの追従に伴って、WHATWG Streamとの相互変換が必要なシーンが増えていました。
 そのため、上記リンクの `conversion.ts` と言うファイルが作られていたのですが、この実装をほとんど移植するだけで完了しました。
 
-とは言え、syscall/jsでラップする必要があり、Promiseの扱いなどはやや面倒でした（詳細は割愛します）
+とは言え、syscall/jsでラップする必要があり、Promiseの扱いなどはやや面倒でした。
 
 https://github.com/syumai/workers/blob/v0.2.0/stream.go
 
