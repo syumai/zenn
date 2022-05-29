@@ -111,7 +111,7 @@ DenoのReader / WriterはGoのio packageを参考に作られたもので、近�
 
 とは言え、syscall/jsでラップする必要があり、Promiseの扱いなどはやや面倒でした。
 
-https://github.com/syumai/workers/blob/v0.2.0/stream.go
+[Streamの変換処理の実装はこの辺りのコード](https://github.com/syumai/workers/blob/v0.2.0/stream.go)で行っています。
 
 ところどころで、Go側からJSのPromiseをawaitするようなユーティリティ関数を呼んだりしています。
 こちらは、チャネルを使ってPromiseの非同期処理の結果を待ち受ける実装になっています。
@@ -177,7 +177,7 @@ https://github.com/syumai/workers/blob/v0.2.0/examples/basic-auth-server
 
 `r2-image-viewer` では、画像をR2から取得して返すだけの実装を行なっています。
 
-https://github.com/syumai/workers/blob/v0.2.0/examples/r2-image-viewer/main.go
+https://github.com/syumai/workers/tree/v0.2.0/examples/r2-image-viewer
 
 デモ: https://r2-image-viewer-tinygo.syumai.workers.dev/syumai.png
 
