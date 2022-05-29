@@ -204,6 +204,14 @@ https://github.com/syumai/workers/tree/v0.2.0/examples/r2-image-server
 
 putの処理は、ReadableStreamの実装ではPromiseが永遠に解決されない状況に陥ってしまい、うまく動かせなかったため、現状メモリに全データをロードする実装になっています。こちらは早く直したいですが、かなりの格闘の末に失敗したので、ちょっと期間を置いてからチャレンジしようと思っています。
 
+### testは？
+
+全然書けてません。syscall/jsが絡む処理のtestは結構面倒で、後回しにしていたら進捗ゼロになってしまいました…。
+
+以前DenoとGoのioインタフェースを相互変換するpackageを作った時は、GoのコードをWasmにコンパイルして、JS側でtestを実行するような形で書いていたので、このような雰囲気で進めようかなと思っています。
+
+https://github.com/syumai/denoio/blob/99abe35fbe76d8f6313d3bbed61a543b89d7830c/test/test.js
+
 ## おわりに
 
 以上、まだまだ開発中のライブラリではありますが、試しに遊んでみてください！
