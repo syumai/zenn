@@ -1,5 +1,5 @@
 ---
-title: "Cloudflare WorkersでGoのHTTPサーバーを動かすためのライブラリを作った"
+title: "Cloudflare Workersで簡単にGoのHTTPサーバーを動かすためのライブラリを作った"
 emoji: "️⛈️"
 type: "tech"
 topics: ["Go", "Cloudflare Workers"]
