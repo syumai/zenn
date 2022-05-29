@@ -3,7 +3,7 @@ title: "Cloudflare Workersで簡単にGoのHTTPサーバーを動かすための
 emoji: "️⛈️"
 type: "tech"
 topics: ["Go", "Cloudflare Workers"]
-published: false
+published: true
 ---
 
 Cloudflare Workersで簡単にGoのHTTPサーバーを動かすためのライブラリを作ったので、紹介させていただきます。(まだかなり実験的な実装です)
