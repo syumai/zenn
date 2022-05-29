@@ -65,12 +65,12 @@ func main() {
 ```
 
 または、 `http.Handle` や `http.HandleFunc` を呼び出して、 `workers.Serve` に `nil` を渡して呼び出してもOKです。
-この場合は、デフォルトで `http.DefaultServeMux` が使われます。
+この場合は、デフォルトの挙動として `http.DefaultServeMux` が使われます。
 
 ```go
 func main() {
 	http.HandleFunc("/hello", func (w http.ResponseWriter, req *http.Request) { ... })
-	workers.Serve(nil) // if nil is given, http.DefaultServeMux is used.
+	workers.Serve(nil)
 }
 ```
 
