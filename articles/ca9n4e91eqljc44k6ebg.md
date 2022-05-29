@@ -193,7 +193,7 @@ https://github.com/syumai/workers/blob/v0.2.0/examples/r2-image-viewer/main.go#L
 	imgPath := strings.TrimPrefix(req.URL.Path, "/")
 	imgObj, err := bucket.Get(imgPath)
 	if err != nil { ... }
-  io.Copy(w, imgObj.Body)
+	io.Copy(w, imgObj.Body)
 ```
 
 また、 `r2-image-server` には、画像のR2バケットへのput / get / deleteを行う実装が含まれています。
