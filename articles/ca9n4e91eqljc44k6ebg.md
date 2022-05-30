@@ -97,11 +97,11 @@ Cloudflare Workersは、fetch eventをハンドリングして、eventに付与�
 
 JavaScript側からGo側に値を渡す箇所については、Go側からグローバルオブジェクトに `handleRequest` と言う関数を登録するようにしました。
 
-https://github.com/syumai/workers/blob/v0.2.0/handler.go#L13-L33
+https://github.com/syumai/workers/blob/v0.2.1/handler.go#L13-L33
 
 JavaScript側から、この関数に対する呼び出しを行う箇所が、リクエストの処理開始地点となります。
 
-https://github.com/syumai/workers/blob/v0.2.0/examples/simple-json-server/worker.mjs#L15
+https://github.com/syumai/workers/blob/v0.2.1/examples/simple-json-server/worker.mjs#L15
 
 ### ストリームの変換
 
@@ -111,12 +111,12 @@ DenoのReader / WriterはGoのio packageを参考に作られたもので、近�
 
 とは言え、syscall/jsでラップする必要があり、Promiseの扱いなどはやや面倒でした。
 
-[Streamの変換処理の実装はこの辺りのコード](https://github.com/syumai/workers/blob/v0.2.0/stream.go)で行っています。
+[Streamの変換処理の実装はこの辺りのコード](https://github.com/syumai/workers/blob/v0.2.1/stream.go)で行っています。
 
 ところどころで、Go側からJSのPromiseをawaitするような処理が入っていたりします。
 チャネルを使ってPromiseの非同期処理の結果を待ち受ける実装になっていて、streamの処理以外でも必要になったのでユーティリティ関数として切り出しています。
 
-https://github.com/syumai/workers/blob/v0.2.0/jsutil.go#L39-L62
+https://github.com/syumai/workers/blob/v0.2.1/jsutil.go#L39-L62
 
 ### ResponseWriterのReadableStreamへの変換
 
@@ -133,11 +133,11 @@ https://twitter.com/__syumai/status/1526456929174048768?s=20&t=qoY_AS-0dOaSC4zXK
 
 responseWriterの実体に、io.Pipeから入手したreaderとwriterの両方を持たせ、Go側からはこのwriterへの書き込みを行い、
 
-https://github.com/syumai/workers/blob/v0.2.0/handler.go#L45
+https://github.com/syumai/workers/blob/v0.2.1/handler.go#L45
 
 JS側ではreaderからの読み込みを行うようにしました。
 
-https://github.com/syumai/workers/blob/v0.2.0/response.go#L28
+https://github.com/syumai/workers/blob/v0.2.1/response.go#L28
 
 これで、Go側とJS側でレスポンスをストリーム処理することに成功しました。
 
@@ -160,14 +160,14 @@ https://twitter.com/sago35tk/status/1526538044073193472?s=20&t=qoY_AS-0dOaSC4zXK
 下記に、easyjsonを使ったサンプルを示しますが、構造体の定義を変更する度にコード生成をする必要があるので少々手間です。
 とは言え、ちょっとした用途なら全然使えそうな感じはしました。
 
-https://github.com/syumai/workers/tree/main/examples/simple-json-server
+https://github.com/syumai/workers/blob/v0.2.1/examples/simple-json-server
 
 あとは、`(*http.Client).Do` などがうまく動きませんでした(自分のやり方が悪いのか…？)。ベーシック認証をかけたプロキシサーバーを実装してみようと思ったのですが、外部にHTTPリクエストを送れなかったので断念しました。
 これは制約としてかなりキツいです。
 
 ひとまずベーシック認証が動作するだけのWorkerのサンプルは出来ましたが、あんまり実用性は無いような感じがします。
 
-https://github.com/syumai/workers/blob/v0.2.0/examples/basic-auth-server
+https://github.com/syumai/workers/blob/v0.2.1/examples/basic-auth-server
 
 ### 現状 Cloudflare R2 はどれくらい使えるのか？
 
@@ -177,15 +177,15 @@ https://github.com/syumai/workers/blob/v0.2.0/examples/basic-auth-server
 
 `r2-image-viewer` では、画像をR2から取得して返すだけの実装を行なっています。
 
-https://github.com/syumai/workers/tree/v0.2.0/examples/r2-image-viewer
+https://github.com/syumai/workers/tree/v0.2.1/examples/r2-image-viewer
 
 デモ: https://r2-image-viewer-tinygo.syumai.workers.dev/syumai.png
 
 wrangler.tomlで指定したbucketName (下記) を指定する必要はありますが、Goのみで実装出来ていることが確認いただけると思います。
 
-https://github.com/syumai/workers/blob/v0.2.0/examples/r2-image-viewer/main.go#L13-L14
+https://github.com/syumai/workers/blob/v0.2.1/examples/r2-image-viewer/main.go#L13-L14
 
-[R2ObjectのBody](https://pkg.go.dev/github.com/syumai/workers@v0.2.0#R2Object)は、io.Readerを実装しているので、http.ResponseWriterにio.Copyすることが出来ます。こうした部分で、ややGoらしさを意識した実装となっています。
+[R2ObjectのBody](https://pkg.go.dev/github.com/syumai/workers@v0.2.1#R2Object)は、io.Readerを実装しているので、http.ResponseWriterにio.Copyすることが出来ます。こうした部分で、ややGoらしさを意識した実装となっています。
 
 ```go
 	bucket, err := workers.NewR2Bucket(bucketName)
@@ -198,7 +198,7 @@ https://github.com/syumai/workers/blob/v0.2.0/examples/r2-image-viewer/main.go#L
 
 また、 `r2-image-server` には、画像のR2バケットへのput / get / deleteを行う実装が含まれています。
 
-https://github.com/syumai/workers/tree/v0.2.0/examples/r2-image-server
+https://github.com/syumai/workers/tree/v0.2.1/examples/r2-image-server
 
 こちらはWeb上のデモは用意していませんが、お手元で簡単に確認いただけますので、ぜひ動かしてみてください。　
 
