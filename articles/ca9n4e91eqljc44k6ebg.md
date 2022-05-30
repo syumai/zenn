@@ -12,7 +12,7 @@ https://github.com/syumai/workers
 
 ## 特徴
 
-* http.Handlerを作って、 `worker.Serve` に渡すだけでCloudflare Workers上でHTTPサーバーとして動作する
+* http.Handlerを作って、 `workers.Serve` に渡すだけでCloudflare Workers上でHTTPサーバーとして動作する
 * 必要なツールは[tinygo](https://tinygo.org/)と[wrangler](https://developers.cloudflare.com/workers/wrangler/) (Cloudflare WorkersのCLI) だけ
 * JavaScript側のコードを触る必要が無い
 * Cloudflare R2のバインディング（一部）を提供している
