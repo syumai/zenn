@@ -20,7 +20,7 @@ https://github.com/syumai/workers
 
 ## デモ
 
-下記のURLにアクセスすると `Hello, world!` と表示され、URL末尾の `world` を `syumai` に差し替えると、 `Hello, syumai!` と表示されます。
+下記のURLにアクセスすると `Hello, world!` と表示され、例としてURL末尾の `world` を `syumai` に差し替えると、 `Hello, syumai!` と表示されます。
 
 https://hello.syumai.workers.dev/?name=world
 
