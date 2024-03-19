@@ -215,7 +215,7 @@ func TestF(t *testing.T) {
 
 https://go.dev/play/p/jzW4S3Kq2rd
 
-出力結果
+出力結果は以下の通りです。
 
 ```
 === RUN   TestF
