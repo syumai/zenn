@@ -3,7 +3,7 @@ title: Goのテストで文字列のポインタ型の値に対する比較を�
 emoji: 🥝
 type: "tech"
 topics: ["Go"]
-published: false
+published: true
 publication_name: "basemachina"
 ---
 
