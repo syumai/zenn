@@ -83,8 +83,8 @@ type Seq2[K, V any] func(yield func(K, V) bool)
 ```go
 s := []string{"a","b","c"}
 
-seq1 := slices.Values(s) // iter.Seq[string] 型
-for v := range seq1 {
+seq := slices.Values(s) // iter.Seq[string] 型
+for v := range seq {
   fmt.Println(v) // a, b, c が順番に表示される
 }
 
@@ -94,7 +94,7 @@ for i, v := range seq2 {
 }
 ```
 
-https://go.dev/play/p/GLogItFxBo9
+https://go.dev/play/p/rC21b4kARS7
 
 # Goのイテレータとは何なのか
 
