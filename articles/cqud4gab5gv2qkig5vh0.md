@@ -187,7 +187,7 @@ https://go.dev/play/p/7ZUVAlMlYLh
 
 このケースでは、イテレータを受け取った関数は、列挙された値を一つの値に集約します。(他の言語で言う `reduce` や `fold` の操作がイメージに近いです)
 
-例えば、`slices.Collect`は`iter.Seq[V]`のイテレータを`V[]`のsliceに集約します。
+例えば、`slices.Collect`は`iter.Seq[V]`のイテレータを`[]V`のsliceに集約します。
 
 ```go
 s1 := []string{"a","b","c"}
