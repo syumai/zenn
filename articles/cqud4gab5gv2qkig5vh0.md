@@ -85,12 +85,12 @@ s := []string{"a","b","c"}
 
 seq := slices.Values(s) // iter.Seq[string] 型
 for v := range seq {
-  fmt.Println(v) // a, b, c が順番に表示される
+	fmt.Println(v) // a, b, c が順番に表示される
 }
 
 seq2 := slices.All(s) // iter.Seq2[int, string] 型
 for i, v := range seq2 {
-  fmt.Println(i, v) // 0 a, 1 b, 2 c が順番に表示される
+	fmt.Println(i, v) // 0 a, 1 b, 2 c が順番に表示される
 }
 ```
 
@@ -201,9 +201,9 @@ https://go.dev/play/p/yK6TkvJwlab
 
 ```go
 m1 := map[string]int{
-  "a": 1,
-  "b": 2,
-  "c": 3,
+	"a": 1,
+	"b": 2,
+	"c": 3,
 }
 seq := maps.All(m1) // iter.Seq2[string, int]
 m2 := maps.Collect(seq) // map[string, int]
