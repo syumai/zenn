@@ -1,9 +1,9 @@
 ---
-title: Go 1.23で登場！イテレータについて知っておくべきこと
+title: Go 1.23のイテレータについて知っておくべきこと
 emoji: 🍓
 type: "tech"
 topics: ["Go"]
-published: false
+published: true
 ---
 
 # はじめに
@@ -158,7 +158,7 @@ func main() {
 
 https://go.dev/play/p/EiA7MJOyntv
 
-上記の例において、ToUpper関数は`iter.Seq[string]`を同じ`iter.Seq[string]`に変換する形でラップしています。ToUpper関数によって得られるイテレータは、ラップしたイテレータの要素を一つずつ順番に取り出して処理するため効率的です。
+上記の例において、ToUpper関数は`iter.Seq[string]`を同じ`iter.Seq[string]`に変換する形でラップしています。ToUpper関数によって得られるイテレータは、ラップしたイテレータの要素を、一気にまとめてではなく、一つずつ順番に取り出して処理するため効率的です。
 また、string型の値を要素とするイテレータとして表現されていれば、どんなデータ構造に対しても適用可能となっています。
 
 この例は、データ列を効率的に扱えると言う点で、`io.Reader`とそのラッパーに似ています。
@@ -303,7 +303,7 @@ mapをイテレータに変換するのに使う関数は以下の通りです�
 * [tenntenn Conference 2024のハンズオンのアーカイブ、資料](https://www.youtube.com/live/03Lo84Ugnyk?si=mosvTWMgcB4yqINE&t=687)
 * [Panaさんの記事](https://zenn.dev/kkkxxx/articles/d9505540581b5d)
 * [iter packageのドキュメント](https://pkg.go.dev/iter)
-* [range over func Proposal](https://go.dev/issue/61405)などをご覧いただくのがよいと思います。
+* [range over func Proposal](https://go.dev/issue/61405)
 
 # まとめ
 
