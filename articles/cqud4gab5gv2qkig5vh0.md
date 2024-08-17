@@ -83,13 +83,13 @@ type Seq2[K, V any] func(yield func(K, V) bool)
 ```go
 s := []string{"a","b","c"}
 
-it1 := slices.Values(s) // iter.Seq[string] 型
-for v := range it1 {
+seq1 := slices.Values(s) // iter.Seq[string] 型
+for v := range seq1 {
   fmt.Println(v) // a, b, c が順番に表示される
 }
 
-it2 := slices.All(s) // iter.Seq2[int, string] 型
-for i, v := range it2 {
+seq2 := slices.All(s) // iter.Seq2[int, string] 型
+for i, v := range seq2 {
   fmt.Println(i, v) // 0 a, 1 b, 2 c が順番に表示される
 }
 ```
@@ -109,6 +109,8 @@ Goのイテレータはただの関数なので、どんなデータ構造も隠
 ただし、イテレータはインタフェースではないので、任意のデータ構造をそのままの型（構造体など）で使うことはできません。rangeループで使うためには、**対象のデータ構造を隠蔽した関数を生成する**必要があります。
 
 値の集合や、値の列を表すデータ構造には色々ありますが、Go 1.23以降の世界では、それらを**イテレータに変換する関数やメソッドが各ライブラリから提供されるようになっていく**はずです。
+
+例として、Russ Coxの作った[omap](https://github.com/rsc/omap) packageでは、Ordered Mapのデータ構造に`All() iter.Seq2[K, V]`[メソッドが実装](https://github.com/rsc/omap/blob/40dad5c0c0fb2f7b45318fa732252edfd450083b/omap.go#L250-L255)されており、簡単にrangeループが使えるようになっています。
 
 ## イテレータはsliceよりも一般的なデータ列の形式
 
@@ -130,27 +132,22 @@ sliceがイテレータと異なる点は、データ列の長さ分のメモリ
 1 については前述の通りで、sliceやmapのrangeループと特に使い方が変わりません。
 2 が、sliceやmapとは大きく変わってくる点です。
 
-イテレータを受け取る関数の代表的な役割は以下の通りです。
-
-1. データ列の変換
-   - いわゆるMap操作
-2. データ列の集約
-3. データ列の結合
+イテレータを受け取る関数の利用ケースをいくつか紹介します。
 
 ## データ列の変換
 
-この種類の関数は、データ列に含まれる各要素を別の要素に変換を行います。
+このケースでは、イテレータを受け取った関数が、データ列に含まれる各要素を別の要素に変換を行います。
 
-簡単な例としては、文字列のストリームを受け取って、全て大文字に変換して返すものが考えられます。
+簡単な例としては、文字列のストリームを受け取って、全て大文字に変換して返すものが考えられます。(他の言語で言う `map` の操作をイメージするとわかりやすいです)
 
 ```go
-func ToUpper(it iter.Seq[string]) iter.Seq[string] {
+func ToUpper(seq iter.Seq[string]) iter.Seq[string] {
 	/* 実装は省略 */
 }
 
 func main() {
 	s := []string{"a", "b", "c"}
-
+// 
 	for _, v := range s {
 		fmt.Println(v) // a, b, c
 	}
@@ -161,16 +158,157 @@ func main() {
 }
 ```
 
+https://go.dev/play/p/EiA7MJOyntv
+
 上記の例において、ToUpper関数はslice `s`の全容をを一度に全ては読み取らず、一つずつ順番に取り出して処理するため効率的です。
 また、文字列を要素とする、slice以外の任意のデータ列に対して適用可能となっています。
 
-データ列を効率的に扱えると言う点で、`io.Reader`と、それに対するWrapperに近いですが、`io.Reader`がバイト列を返すストリームであるのに対し、イテレータは任意の型の値をデータ列に含む事が出来る点で大きく異なります。
+この例は、データ列を効率的に扱えると言う点で、`io.Reader`とそのラッパーに似ています。
+
+```go
+func ToUpperReader(r io.Reader) io.Reader {
+	/* 実装は省略 */
+}
+
+func main() {
+	s := "abc"
+
+	sr := strings.NewReader(s)
+	io.Copy(os.Stdout, sr) // abc
+
+	ur := ToUpperReader(strings.NewReader(s))
+	io.Copy(os.Stdout, ur) // ABC
+}
+```
+
+https://go.dev/play/p/7ZUVAlMlYLh
+
+しかしながら、イテレータは任意の型の値をデータ列に含む事が出来るのに対し、`io.Reader`がバイト列のストリームでしかない点で大きく異なります。(リンク先の`ToUpperReader`のサンプルコードでは、読み取ったバイト列に対して`bytes.ToUpper`を呼ぶ実装としていますが、本来はbyteではなくruneに対して操作を行うべきで、安全な文字列操作とは言えません)
 
 ## データ列の集約
 
+このケースでは、イテレータを受け取った関数は、列挙された値を一つの値に集約します。(他の言語で言う `reduce` や `fold` の操作がイメージに近いです)
+
+例えば、`slices.Collect`は`iter.Seq[V]`のイテレータを`V[]`のsliceに集約します。
+
 ```go
+s1 := []string{"a","b","c"}
+seq := slices.Values(s1) // iter.Seq[string]
+s2 := slices.Collect(seq) // []string{"a","b","c"}
 ```
 
-# slices / maps packageの使い方
+https://go.dev/play/p/yK6TkvJwlab
+
+同様に、`maps.Collect`は`iter.Seq[K,V]`のイテレータを`map[K]V`のmapに集約します。
+
+```go
+m1 := map[string]int{
+  "a": 1,
+  "b": 2,
+  "c": 3,
+}
+seq := maps.All(m1) // iter.Seq2[string, int]
+m2 := maps.Collect(seq) // map[string, int]
+```
+
+https://go.dev/play/p/giDvNj5f53z
+
+下記の例のように、`iter.Seq[int]`のデータ列の値を足し合わせる`SumInt`のような関数も書けます。
+
+```go
+func SumInt(seq iter.Seq[int]) int {
+	var result int
+	for i := range seq {
+		result += i
+	}
+	return result
+}
+
+func main() {
+	ints := []int{1, 2, 3}
+	sum := SumInt(slices.Values(ints))
+	fmt.Println(sum) // 6
+}
+```
+
+https://go.dev/play/p/A1sPvW9ofoB
+
+
+## その他の利用ケース
+
+ここで紹介した以外にも、
+
+* データ列の要素を条件式によって抽出する関数 (filter)
+* データ列の連結
+
+など、様々な利用ケースが考えられます。
+
+[go-functional v2 betaのit package](https://pkg.go.dev/github.com/BooleanCat/go-functional/v2@v2.0.0-beta.6/it)に、Map, Fold, Filter, Chainなどの実装があったので、興味のある方はこちらをぜひご覧ください。
+
+# slice / mapとイテレータの相互変換
+
+Go 1.23のリリースに合わせて、slices / maps packageにイテレータを扱うための関数がいくつか追加されました。
+[追加された関数の一覧がGo 1.23のリリースノートに記載されている](https://go.dev/doc/go1.23#iterators)ので、詳しく知りたい方はこちらをご覧ください。
+
+追加された関数の中で、最もよく使うと考えられるのは、slice / mapとイテレータを相互変換して使う関数です。
+
+## sliceとイテレータを相互変換する関数
+
+sliceをイテレータに変換するのに使う関数は以下の通りです。
+
+* [slices.All()](https://pkg.go.dev/slices#All)
+  - `[]V`のsliceを、`iter.Seq2[int, V]`の形式で、index, 値の組のイテレータに変換します。
+* [slices.Values()](https://pkg.go.dev/slices#Values)
+  - `[]V`のsliceを、`iter.Seq[V]`の形式で、値のみのイテレータに変換します。
+
+イテレータをsliceに変換するのに使う関数は以下の通りです。
+
+* [slices.Collect()](https://pkg.go.dev/slices@go1.23.0#Collect)
+  - `iter.Seq[V]`のイテレータを、`[]V`のsliceに変換します。
+* [slices.Sorted()](https://pkg.go.dev/slices@go1.23.0#Sorted)
+  - `iter.Seq[V cmp.Ordered]`のイテレータを、ソートされた`[]V`のsliceに変換します。
+  - ソート方法を指定できる[`slices.SortedFunc()`](https://pkg.go.dev/slices@go1.23.0#SortedFunc)も追加されました。
+
+## mapとイテレータを相互変換する関数
+
+mapをイテレータに変換するのに使う関数は以下の通りです。
+
+* [maps.All()](https://pkg.go.dev/maps#All)
+  - `map[K]V`のmapを、`iter.Seq2[K, V]`の形式で、キー, 値の組のイテレータに変換します。
+* [maps.Keys()](https://pkg.go.dev/maps#Keys)
+  - `map[K]V`のmapを、`iter.Seq[K]`の形式で、キーのみのイテレータに変換します。
+* [maps.Values()](https://pkg.go.dev/maps#Values)
+  - `map[K]V`のmapを、`iter.Seq[V]`の形式で、値のみのイテレータに変換します。
+
+イテレータをmapに変換するのに使う関数は以下の通りです。
+
+* [maps.Collect()](https://pkg.go.dev/maps@go1.23.0#Collect)
+  - `iter.Seq2[K, V]`のイテレータを、`map[K]V`のmapに変換します。
 
 # どこまで知っておく必要があるのか
+
+基本的には、本記事で紹介した、
+
+* イテレータの種類
+* イテレータの使い方
+* slice / mapとイテレータの相互変換
+
+について知っていれば問題ないと思います。
+
+イテレータの実装方法について知るのももちろん有益ですが、標準ライブラリだけでもイテレータとslice / mapの相互変換はできますし、その他のライブラリについてはライブラリ作者がイテレータへの変換機構を用意してくれることを期待できるでしょう。
+イテレータに対する複雑な操作を行いたいようなケースでも、先ほど紹介した[go-functional](https://github.com/BooleanCat/go-functional)などでまかなえるものが多いと思います。
+
+まだ、イテレータは登場したばかりですが、徐々にGoの周辺ライブラリがイテレータに対応していくと思われますので、ライブラリが揃うのに合わせて徐々に移行していくので十分でしょう。
+
+自分でイテレータを実装してみたいという方は下記の資料をご覧いただくのがよいと思います。
+
+* [tenntennさんのGo Conference 2024の登壇資料](https://tenn.in/gocon24)
+* [tenntenn Conference 2024のハンズオンのアーカイブ、資料](https://www.youtube.com/live/03Lo84Ugnyk?si=mosvTWMgcB4yqINE&t=687)
+* [Panaさんの記事](https://zenn.dev/kkkxxx/articles/d9505540581b5d)
+* [iter packageのドキュメント](https://pkg.go.dev/iter)
+* [range over func Proposal](https://go.dev/issue/61405)などをご覧いただくのがよいと思います。
+
+# まとめ
+
+Go 1.23で追加されたイテレータは、その実装方法を詳しく知らなくても、種類や、使い方についての基本的な知識さえ持っていれば十分に活用できます。
+移行についてはエコシステムが充実してきてからで問題ないので急ぐ必要はありませんが、イテレータを使うためのライブラリの実装も出てきているので、興味のある方はぜひ試してみてください。
