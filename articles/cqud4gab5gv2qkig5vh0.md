@@ -1,6 +1,6 @@
 ---
 title: Go 1.23のイテレータについて知っておくべきこと
-emoji: 🍓
+emoji: 🌌
 type: "tech"
 topics: ["Go"]
 published: true
