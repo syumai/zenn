@@ -108,18 +108,6 @@ ECMAScript仕様書を読み始めるには、以下を知っておく必要が�
 
 <!-- _class: lead -->
 
-# 表記法
-
----
-
-## 表記法
-
-* `5. Notational Conventions` (表記規則) で示されています
-
----
-
-<!-- _class: lead -->
-
 # 文法の表記法
 
 ---
@@ -130,7 +118,7 @@ ECMAScript仕様書を読み始めるには、以下を知っておく必要が�
 * `Syntax` に記載される *斜体文字* は[非終端記号](https://262.ecma-international.org/15.0/#sec-nonterminal-symbols-and-productions)
   - 下記スクショでは *RelationalExpression* など
 * `:` や `::` などは非終端記号の定義 (文法生成規則とも言う)
-  - 左辺の非終端記号を構成するトークン列が `:` や `::` などの右辺に示される
+  - 左辺の非終端記号を構成するトークン列が `:` などの右辺に示される
     - 右辺のトークン列には、非終端記号および終端記号が並ぶ
   - 構文的文法 (Syntactic Grammar) を示す `:` が最も頻出する
 
@@ -145,7 +133,18 @@ ECMAScript仕様書を読み始めるには、以下を知っておく必要が�
 * 等幅フォントの文字は[終端記号](https://262.ecma-international.org/15.0/#sec-terminal-symbols)
   - 下記スクショでは `<`
 * 終端記号は、非終端記号と異なり、記載された通りにソースコード中に現れる
-  - 非終端記号は最終的にこれらの記号に辿り着くため、終端記号と呼ばれる
+
+<div style="height: 200px">
+  <img src="./images/cmopoldmb4s5m2uo5ne0/relational-operators-trimmed.png" style="height: 100%">
+</div>
+
+---
+
+## 文法生成規則の読みにくさ
+
+* 下記の生成規則も実は**2つの生成規則を省略して1つにまとめたもの**
+* **省略記法が大量にある**ので難しい
+  - ここでは3つ紹介します
 
 <div style="height: 200px">
   <img src="./images/cmopoldmb4s5m2uo5ne0/relational-operators-trimmed.png" style="height: 100%">
@@ -157,7 +156,6 @@ ECMAScript仕様書を読み始めるには、以下を知っておく必要が�
 
 * 左辺の非終端記号が同一となる生成規則が複数並ぶ場合、縦に並べて記載される
   - 繰り返し同じ記載をするのを避けるための省略記法
-    - 共通した左辺を持つ複数の生成規則を指して代替 (alternatives) とも言う
 
 ### 例
 
@@ -397,6 +395,7 @@ ECMAScriptでは、以下の2種類で定義されている
 
 * Completion Recordは、プログラム上の制御フローおよび、それに伴う値を伝播する役割を持っているECMAScript仕様上のみの型
   - 制御フローの例: `break, continue, return, throw`
+  - 多くのAbstract OperationやSyntax-Directed Operationがこれを返す
 * Completion Recordは大きく2種類に分けられる
   - normal completion
     - Completion Recordの `[[Type]]` が `NORMAL` のもの
