@@ -72,7 +72,7 @@ DefinitelyTypedがpnpm workspaceになったのは、2023年10月のことでし
 
 https://github.com/DefinitelyTyped/DefinitelyTyped/pull/67085
 
-これより前は各packageの依存のインストールなどで苦労があったようですが、幸い（？）筆者はpnpm workspace化された後に初めて触れたので、非常に快適にコントリビュートを行うことができます。
+これより前は各packageの依存のインストールなどで苦労があったようですが、幸い（？）筆者はpnpm workspace化された後に初めて触れたので、非常に快適にコントリビュートを行うことができました。
 
 
 ## DefinitelyTypedのバージョニング
