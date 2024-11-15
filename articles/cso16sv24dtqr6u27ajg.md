@@ -82,7 +82,7 @@ DefinitelyTyped配下のプロジェクトのpackage.jsonに記載するバー�
 https://github.com/DefinitelyTyped/DefinitelyTyped/blob/77472518b28d0e7001bf23715cc08c4b212c613a/types/encoding-japanese/package.json#L2-L4
 
 ライブラリ本体と合わせる必要があるのはmajor, minorバージョンまでで、patchバージョンはDefinitelyTypedのCI/CDがnpm publishを行う際に自動で割り当てられます。
-初めて使われたminorバージョンについては、patchバージョンが0でpublishされ、その後の更新でインクリメントされていきます。上記の例で言うと、 `2.2.0` が初めにpublishされ、次の変更で `2.2.1` にインクリメントされていくという流れになります。この仕組みにより、DefinitelyTypedの型定義のバージョンの独立性
+初めて使われたminorバージョンについては、patchバージョンが0でpublishされ、その後の更新でインクリメントされていきます。上記の例で言うと、 `2.2.0` が初めにpublishされ、次の変更で `2.2.1` にインクリメントされていくという流れになります。
 
 ここで重要なのは、**DefinitelyTypedから配布されるpackageのpatchバージョンはライブラリ本体と同期していない**点です。ライブラリ本体のpatchバージョンと、`@types`で配布される型定義のpatchバージョンを合わせる形でインストールすることには特に意味がないということを理解した上で利用しましょう。
 
