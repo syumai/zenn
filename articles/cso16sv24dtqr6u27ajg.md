@@ -101,8 +101,7 @@ https://github.com/DefinitelyTyped/DefinitelyTyped/blob/77472518b28d0e7001bf2371
 ## 1. DefinitelyTypedのリポジトリをcloneし、必要なdependenciesをインストールする
 
 まずは `github.com/DefinitelyTyped/DefinitelyTyped` をcloneします。
-その後、変更を加えるpackageのWorkspaceを指定してpnpm installします。
-ここで無邪気にフィルタなしでpnpm installすると、8900個以上あるWorkspaceのpnpm installが一斉に走って完了に時間がかかってしまいます。そうなってしまうと大変なので、 `pnpm install -w --filter "...{./types/foo}...` といった形でフィルタします。
+その後、必要なdependenciesをインストールするのですが、 ここで無邪気にpnpm installを実行すると、8900個以上あるWorkspaceのpnpm installが一斉に走って完了に時間がかかってしまいます。そうなってしまうと大変なので、 `pnpm install -w --filter "...{./types/npm package名}...` といった形で変更を加えるpackageのWorkspaceのみをフィルタしてインストールします。
 
 ## 2. 型定義を修正する
 
@@ -148,11 +147,11 @@ sjisArray5; // $ExpectType string
 
 ## 6. PRをOpenする
 
-PRをOpenすると、CODEOWNERにレビューの通知が飛びます。あとは、変更内容に問題がないか確認いただくのを待ちましょう。
-今回は、CODEOWNERのrhysdさんが非常に早く対応してくださったので、PRを出したその日のうちにマージ&リリースまで進めていただくことができました。
+PRをOpenすると、CODEOWNERにレビューの通知が飛びます。あとは、変更内容に問題がないかの確認が完了するのを待ちましょう。
+今回は、CODEOWNERのrhysdさんが非常に迅速にレビューしてくださったので、PRを出したその日のうちにマージ&リリースまで進めていただくことができました。
 
 # おわりに
 
 DefinitelyTypedはあまりに巨大なプロジェクトなので、自分で試みるまでは変更を加えるのが非常に難しいのではないかと思っていました。しかし、実際には、コントリビュートする手順がきちんとまとまっていますし、最近行われたpnpm workspace化もあり、ほとんど苦労することなく作業を完遂することができました。
 むしろ、かなり整った線路に乗って作業ができたという感覚があり、流石、これだけの規模で長期に渡ってメンテナンスされ続けているプロジェクトはすごい…。という感動すらありました。
-もし、お使いのライブラリで、ライブラリ本体とDefinitelyTypedから配布されている型定義がズレてしまっており困った時は、ぜひ気軽にDefinitelyTypedへのコントリビュートを検討してみてください。
+もし、お使いのライブラリで、ライブラリ本体とDefinitelyTypedから配布されている型定義がズレてしまっており困った時は、ぜひ気軽にコントリビュートを検討してみてください。
