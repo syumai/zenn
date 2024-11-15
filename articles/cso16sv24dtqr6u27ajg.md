@@ -52,7 +52,7 @@ https://sosukesuzuki.dev/posts/prettier-type-definitions/
 前述の各npm packageに対応するpackage.jsonに記述された `owner` キーの情報は、GitHubのCODEOWNERSファイルの自動生成に使われており、こちらは現在8962行あるようでした。
 https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/.github/CODEOWNERS
 
-`types` 配下の各ディレクトリが持つべきファイルは[READMEに示されています](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/68f519b4fee27028a73cebb98f60d78469ddea55/README.md#create-a-new-package)。基本的なものとしては `package.json` と `tsconfig.json` が存在すればよく、追加で `.eslintrc.json` や `.npmignore` を設定ファイルとして持つことができます。テストコードは、 `${package名}-tests.ts`というファイル名で追加します。テストコードに対しては、型チェックのみが行われます。
+`types` 配下の各ディレクトリが持つべきファイルは[READMEに示されています](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/68f519b4fee27028a73cebb98f60d78469ddea55/README.md#create-a-new-package)。基本的なものとしては `package.json` と `tsconfig.json` が存在すればよく、追加で `.eslintrc.json` や `.npmignore` を設定ファイルとして持つことができます。テストコードは、 `${npm package名}-tests.ts`というファイル名で追加します。テストコードに対しては、型チェックのみが行われます。
 残りは、プロジェクトごとに必要なディレクトリを独自の判断で切りつつ `.d.ts` ファイルを配置しているようでした。
 
 例として、encoding-japaneseでは次のような構成になっています。
@@ -130,12 +130,12 @@ const sjisArray5 = Encoding.convert("🐙", {
 sjisArray5; // $ExpectType string
 ```
 
-テストコードの修正ができたら、 `pnpm test {package名}` で実行します。型エラーがあればテストが失敗します。
+テストコードの修正ができたら、 `pnpm test ${npm package名}` で実行します。型エラーがあればテストが失敗します。
 全ての修正が完了したら、最後に `pnpm run test-all` を実行して、他のpackageへの影響がないことを確認します。
 
 ## 4. コードをフォーマットする
 
-全ての変更作業が終わったら、[dprint](https://dprint.dev/)でフォーマットを行います。 `pnpm dprint fmt -- 'types/{package名}/**/*.ts'` の実行で簡単にフォーマットが適用されます。
+全ての変更作業が終わったら、[dprint](https://dprint.dev/)でフォーマットを行います。 `pnpm dprint fmt -- 'types/${npm package名}/**/*.ts'` の実行で簡単にフォーマットが適用されます。
 
 ## 5. (必要があれば) バージョンを更新する
 
