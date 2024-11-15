@@ -49,8 +49,7 @@ https://sosukesuzuki.dev/posts/prettier-type-definitions/
 
 2024年11月現在、DefinitelyTypedは、数えた限りで `types` ディレクトリ配下に**8953プロジェクト**を保持している超巨大なpnpm workspaceとなっています。
 
-前述の各npm packageに対応するpackage.jsonに記述された `owner` キーの情報は、GitHubのCODEOWNERSファイルの自動生成に使われており、こちらは現在8962行あるようでした。
-https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/.github/CODEOWNERS
+前述の各npm packageに対応するpackage.jsonに記述された `owner` キーの情報は、GitHubのCODEOWNERSファイルの自動生成に使われており、こちらは[現在8962行ある](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/b5dc32740d9b45d11cff9b025896dd333c795b39/.github/CODEOWNERS)ようでした。
 
 `types` 配下の各ディレクトリが持つべきファイルは[READMEに示されています](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/68f519b4fee27028a73cebb98f60d78469ddea55/README.md#create-a-new-package)。基本的なものとしては `package.json` と `tsconfig.json` が存在すればよく、追加で `.eslintrc.json` や `.npmignore` を設定ファイルとして持つことができます。テストコードは、 `${npm package名}-tests.ts`というファイル名で追加します。テストコードに対しては、型チェックのみが行われます。
 残りは、プロジェクトごとに必要なディレクトリを独自の判断で切りつつ `.d.ts` ファイルを配置しているようでした。
