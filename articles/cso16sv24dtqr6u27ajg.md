@@ -3,7 +3,7 @@ title: 初めてDefinitelyTypedにPRを出した話
 emoji: ⌨️
 type: tech
 topics: ["TypeScript"]
-published: false
+published: true
 ---
 
 # PRを出すことになった経緯
