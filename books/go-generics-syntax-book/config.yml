@@ -1,0 +1,8 @@
+title: "Go 1.18 のジェネリクスの文法まとめ"
+summary: "Go 1.18 で導入される見込みの、ジェネリクス関連の文法について簡易的な説明を行う本です。"
+topics: ["Go", "Generics"]
+published: false
+price: 0
+chapters:
+  - introduction
+  - overview
