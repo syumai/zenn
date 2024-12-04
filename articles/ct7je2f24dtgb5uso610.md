@@ -223,7 +223,7 @@ eval(`
 `);
 ```
 
-ここで、[indirect eval](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/eval#%E7%9B%B4%E6%8E%A5%E7%9A%84%E3%81%BE%E3%81%9F%E3%81%AF%E9%96%93%E6%8E%A5%E7%9A%84%E3%81%AA_eval)を活用できます。indirect evalは、一度変数に格納したり、式として評価するなどした結果として、**間接的に得たeval関数**に対する呼び出しを指します。indirect evalは、evalが呼び出されたスコープを無視してグローバルスコープで動作するという点と、Strict mode配下で呼び出されたかどうかの文脈を無視するという特徴があります。この性質によって、Module配下でありながらwith文を使うことができます。
+ここで、[indirect eval](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/eval#%E7%9B%B4%E6%8E%A5%E7%9A%84%E3%81%BE%E3%81%9F%E3%81%AF%E9%96%93%E6%8E%A5%E7%9A%84%E3%81%AA_eval)を活用できます。indirect evalは、一度変数に格納したり、式として評価するなどした結果として、**間接的に得たeval関数**に対する呼び出しを指します。indirect evalは、evalが呼び出されたスコープを無視してグローバルスコープで動作するという点と、Strict mode配下で呼び出されたかどうかの文脈を無視するという特徴があります。この性質によって、Module配下でありながらwith文を使うことができます。以下のサンプルコードでは、[カンマ演算子](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators/Comma_operator)を使った式により間接的に得られたeval関数を使用しています。
 
 ```js
 // exit-from-strict-2.mjs
