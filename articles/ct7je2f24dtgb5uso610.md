@@ -58,7 +58,7 @@ $ node index.js
 # CommonJS modulesとES modulesの違い
 
 CommonJS modulesからES modulesを利用できるようになったという話ですが、これらの違いは一体何でしょうか？
-(実際には他にも色々ありますが、) 本記事で解説したい内容に絞って言うと、端的に、ECMAScriptの仕様上の概念として、Node.jsにおけるCommonJS modulesのコードは[**Script**](https://262.ecma-international.org/14.0/index.html#sec-scripts)に、ES modulesのコードは[**Module**](https://262.ecma-international.org/14.0/index.html#sec-modules)に対応するという違いがあります。
+(実際には他にも色々ありそうですが、) 本記事で解説したい内容に絞って言うと、端的に、ECMAScriptの仕様上の概念として、Node.jsにおけるCommonJS modulesのコードは[**Script**](https://262.ecma-international.org/14.0/index.html#sec-scripts)に、ES modulesのコードは[**Module**](https://262.ecma-international.org/14.0/index.html#sec-modules)に対応するという違いがあります。
 
 Node.jsは、 `.cjs` 拡張子のファイル、またはpackage.jsonに `type: "module"` が指定されていないときの `.js` ファイルをCommonJS modules (Script) として、 `.mjs` 拡張子のファイル、またはpackage.jsonに `type: "module"` が指定されているときの `.js` ファイルをES modules (Module) として扱います^[詳しい判定ロジック: https://nodejs.org/api/packages.html#determining-module-system]。
 
