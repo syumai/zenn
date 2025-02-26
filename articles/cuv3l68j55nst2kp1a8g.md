@@ -79,11 +79,27 @@ type A[P any] = P // illegal: P is a type parameter
 ジェネリック型と、ジェネリックエイリアスの最も大きな違いは、 **型同一性** (type identity) にあります。
 型定義によって導入されたジェネリック型は、使用する際に必ずなんらかの **名前付き型** (named type) を得ます。
 
+```go
+type IntMap[K comparable] map[K]int
+
+m1 := map[string]int{"a": 1} // m1はmap[string]int型
+m2 := IntMap[string]{"b": 2} // m2はIntMap[string]型
+```
+
+一方で、ジェネリックエイリアスは、使用する際に新たな名前付き型を導入しません。(別のジェネリック型に対するエイリアスだった場合は、エイリアスの対象の新たな名前付き型が導入されます。)
+
+```go
+type IntMap[K comparable] = map[K]int
+
+m1 := map[string]int{"a": 1} // m1はmap[string]int型
+m2 := IntMap[string]{"b": 2} // m2もmap[string]int型
+```
+
 Goの言語仕様に書かれている [^2] 通り、ある名前付き型は常に他の名前付き型とは異なる型となります。
 
 > A named type is always different from any other type.
 
-異なる型同士では、代入や演算処理などの操作が制限されます。
+異なる型同士では、代入や演算処理などの操作が制限されることがあります。
 
 ```go
 // int型に対して名前付き型のMyIntを定義
@@ -94,20 +110,9 @@ var myInt MyInt // MyInt型の変数iを宣言
 myInt = i       // int型の値はMyInt型の変数には代入できない
 ```
 
-一方で、ジェネリックエイリアスは、使用する際に新たな名前付き型を導入しません。(別のジェネリック型に対するエイリアスだった場合は、エイリアスの対象の新たな名前付き型が導入されることがありえます。)
-
-```go
-type IntMap[K comparable] = map[K]int
-
-m1 := map[string]int{"a": 1} // m1はmap[string]int型
-m2 := IntMap[string]{"b": 2} // m2もmap[string]int型
-
-
-```
-
 # ユースケース
 
-型エイリアスの最も主要なユースケースは、コードの **リファクタリング** です。
+型エイリアスの最も主要なユースケースは、プログラムの **リファクタリング** です。
 特に、ちょっとした関数の分割にとどまらない、パッケージの移動などの大規模なリファクタリングを指します。
 
 2024年9月17日にGo Blogに書かれた[型エイリアスについての記事](https://go.dev/blog/alias-names)でも、この点が強調されていました。なお、同記事において、型エイリアスの導入から、Go 1.24でジェネリックエイリアスが導入されるまでの経緯の詳細について解説が行われていたので、以下の内容はこちらの記事に基づきます。
@@ -120,12 +125,12 @@ m2 := IntMap[string]{"b": 2} // m2もmap[string]int型
 ```go
 package p
 
-func F() p3.T { return 1 }
+func F() T { return 1 }
 const C = 1
 type T int
 ```
 
-このパッケージ `p` を使うコードは例えば以下のようになっているでしょう。(内容自体には特に意味がない点にご留意ください)
+このパッケージ `p` を使うコードは例えば以下のようになっているでしょう。
 
 ```go
 package main
@@ -213,9 +218,9 @@ type T = p3.T
 
 ## ジェネリック型のリファクタリング
 
-実は、この単純な話がジェネリック型については有効ではありませんでした。
+実は、この単純な型エイリアスのユースケースがジェネリック型については利用できませんでした。
 
-**型エイリアスが型パラメータを持てない** という点が問題となっていました。
+問題は、**型エイリアスが型パラメータを持てない** という点です。
 
 先ほどの例で、パッケージ `p` の型 `T` がジェネリック型だったとします。
 
@@ -233,7 +238,7 @@ type T = p3.T
 まず、ジェネリック型は、使用する際に型引数を指定して、インスタンス化する必要があります。
 上記のようなエイリアス宣言では、 `p3.T` の型パラメータ `P` に渡す型引数が定まりません。
 
-また、型パラメータを省略したら、自動的にエイリアス指定先のパラメータ全てを引き継ぐといった仕様もありません。
+また、エイリアス宣言で型パラメータ宣言を省略したときに、自動的にエイリアス指定先の型の型パラメータ全てを引き継ぐといった仕様もありません。
 
 ```go
 type T = p3.T[/* ここに何の型が渡るか不定 */]
@@ -247,11 +252,83 @@ type T[P any] = p3.T[P]
 
 ## その他のユースケース
 
-* 型の省略
-* 型引数の明示的な指定 (named typeは導入しない)
-  - 型定義にしちゃうと、メソッド定義とか消える
+### 型パラメータ追加時の後方互換性維持
 
-# ジェネリックエイリアスの導入に時間がかかった理由
+ジェネリックエイリアスは、ジェネリック型に型パラメータが増えた際の後方互換性維持に使うことができます。
+
+例えば、以下のように `string` 型の値をキーとして任意の `V` 型の値を保持する `Cache` 型について考えます。
+
+```go
+type Cache[V any] struct{
+  m sync.Map
+}
+
+func (c *Cache[V]) Put(key string, v V) { /* */ }
+func (c *Cache[V]) Get(key string) V { /* */ }
+```
+
+このCache型は、以下のようにインスタンス化して使います。
+
+```go
+type User struct {}
+var userCache Cache[User]
+```
+
+ここで、この `Cache` 型のキーを任意の型に差し替え可能にしようとすると、後方互換性を崩してしまいます。
+
+```go
+type Cache[K comparable, V any] struct{/* */}
+
+var userCache Cache[User] // 型引数の数が合わない
+```
+
+今回の場合は、別の名前の型 `CacheKV` に実装を移し、 `Cache` はキー型を `string` に固定した型エイリアスとするのがよいでしょう。　
+
+```go
+type CacheKV[K comparable, V any] struct{
+  m sync.Map
+}
+
+func (c *Cache[_, V]) Put(key K, v V) { /* */ }
+func (c *Cache[K, V]) Get(key K) V { /* */ }
+
+// 後方互換性を保ったまま、新しい型に移行できている
+type Cache[V any] = CacheKV[string, V]
+```
+
+### 型パラメータを事前に指定したジェネリック型の公開
+
+あるジェネリック型と同じ型を使いつつ、型パラメータを指定しないでよい形で型を公開できます。
+上記の後方互換性維持以外にパッと思いつかなかったですが、ライブラリだとユースケースがあるかもしれないです。
+
+```go
+type (
+  intMap[K comparable] map[K]int
+  StringIntMap = intMap[string]
+  IntIntMap    = intMap[int]
+)
+```
+
+### 複合型の型名の省略
+
+関数型のような名前の長い名前の型が繰り返し現れるときに、その名前を省略したいが、新たな名前付き型の導入をしたくはない場合に使うことができます。
+
+```go
+type Proxy[In, Out any] = func(ctx context.Context, in In) (Out, error)
+
+// generic aliasあり
+func registerProxy1[In, Out any](p Proxy[In, Out]) {}
+
+// generic aliasなし
+func registerProxy2[In, Out any](p func(ctx context.Context, in In) (Out, error)) {}
+```
+
+## 導入に時間がかかった理由
+
+Go 1.18でのジェネリクス導入時に合わせてリリースするべきかの議論が行われていましたが、十分にジェネリクスが使われるようになり、その知見が溜まってから実装した方がよいというGo teamの判断によって初期スコープから外されていました。
+https://github.com/golang/go/issues/46477#issuecomment-852701491
+
+Go 1.18のリリースからほぼ3年が経過し、十分に使われるようになったため、このタイミングでの実装になったのではないでしょうか。
 
 # 参考文献
 
